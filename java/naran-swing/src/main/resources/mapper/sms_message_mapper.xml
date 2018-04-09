@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.lechuu.swing.entity.message.SmsMessagePO">
+	<resultMap id="smsMessageMap" type="SmsMessage">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="mobile" column="MOBILE" jdbcType="VARCHAR"/>
+		<result property="content" column="CONTENT" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE" jdbcType="VARCHAR"/>
+		<result property="sendState" column="SEND_STATE" jdbcType="VARCHAR"/>
+		<result property="sendStateRemark" column="SEND_STATE_REMARK" jdbcType="VARCHAR"/>
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR"/>
+		<result property="template" column="TEMPLATE" jdbcType="VARCHAR"/>
+		<result property="alidayuTemplateId" column="ALIDAYU_TEMPLATE_ID" jdbcType="VARCHAR"/>
+		<result property="alidayuSmsId" column="ALIDAYU_SMS_ID" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addSmsMessage" parameterType="SmsMessage" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO SMS_MESSAGE (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			MOBILE,
+			CONTENT,
+			TYPE,
+			SEND_STATE,
+			SEND_STATE_REMARK,
+			OPERATOR,
+			TEMPLATE,
+			ALIDAYU_TEMPLATE_ID,
+			ALIDAYU_SMS_ID
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{mobile,jdbcType=VARCHAR},
+			#{content,jdbcType=VARCHAR},
+			#{type,jdbcType=VARCHAR},
+			#{sendState,jdbcType=VARCHAR},
+			#{sendStateRemark,jdbcType=VARCHAR},
+			#{operator,jdbcType=VARCHAR},
+			#{template,jdbcType=VARCHAR},
+			#{alidayuTemplateId,jdbcType=VARCHAR},
+			#{alidayuSmsId,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateSmsMessage" parameterType="SmsMessage">
+		UPDATE SMS_MESSAGE
+		<set>
+			<if test="operator != null">
+				OPERATOR = #{operator},
+			</if>
+			<if test="sendState != null">
+				SEND_STATE = #{sendState},
+			</if>
+			<if test="sendStateRemark != null">
+				SEND_STATE_REMARK = #{sendStateRemark},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="findSmsMessageByAlidayuSmsId" parameterType="String" resultMap="smsMessageMap">
+		SELECT * FROM SMS_MESSAGE WHERE EXPIRED_TIME IS NULL AND ALIDAYU_SMS_ID = #{alidayuSmsId}
+	</select>
+	
+</mapper>

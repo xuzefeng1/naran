@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.order.OrderFeedback">
+	<resultMap id="OrderFeedbackMap" type="OrderFeedback">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="FEEDBACK_CONTENT" property="feedbackContent" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="ACCOUNT_ID" property="accountId" jdbcType="BIGINT" />
+		<result column="FEEDBACK_IMGS" property="feedbackImgs" jdbcType="VARCHAR" />
+		<result column="ORDER_ID" property="orderId" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addOrderFeedback" parameterType="OrderFeedback" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_order_feedback (FEEDBACK_CONTENT, CREATE_TIME,
+		UPDATE_TIME, EXPIRED, ACCOUNT_ID,
+		FEEDBACK_IMGS, ORDER_ID)
+		values (#{feedbackContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}, #{expired,jdbcType=BIT}, #{accountId,jdbcType=BIGINT},
+		#{feedbackImgs,jdbcType=VARCHAR}, #{orderId,jdbcType=BIGINT})
+	</insert>
+
+	<update id="updateOrderFeedback" parameterType="OrderFeedback">
+		update naran_order_feedback
+		<set>
+			<if test="feedbackContent != null">
+				FEEDBACK_CONTENT = #{feedbackContent,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="feedbackImgs != null">
+				FEEDBACK_IMGS = #{feedbackImgs,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				ORDER_ID = #{orderId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findOrderFeedbackById" parameterType="Long" resultMap="OrderFeedbackMap">
+		SELECT * FROM naran_order_feedback WHERE ID = #{id}
+	</select>
+	<select id="findOrderFeedbackByOrderId" parameterType="Long" resultMap="OrderFeedbackMap">
+		SELECT * FROM naran_order_feedback WHERE EXPIRED=1 AND ORDER_ID = #{orderId} limit 1
+	</select>
+
+	<select id="findOrderFeedbackByPage" parameterType="HashMap" resultMap="OrderFeedbackMap">
+		SELECT * FROM naran_order_feedback WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

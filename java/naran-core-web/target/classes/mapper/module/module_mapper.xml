@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.module.Module">
+	<resultMap id="ModuleMap" type="Module">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="logo" column="LOGO" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="url" column="URL" jdbcType="VARCHAR"/>
+		<result property="category" column="CATEGORY" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS" jdbcType="VARCHAR"/>
+		<result property="priority" column="PRIORITY" jdbcType="BIGINT"/>
+	</resultMap>
+	
+	<insert id="addModule" parameterType="Module" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO MODULE (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			LOGO,
+			NAME,
+			DESCRIPTION,
+			URL,
+			CATEGORY,
+			PRIORITY,
+			STATUS
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{logo,jdbcType=VARCHAR},
+			#{name,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{url,jdbcType=VARCHAR},
+			#{category,jdbcType=VARCHAR},
+			#{priority,jdbcType=BIGINT},
+			#{status,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateModule" parameterType="Module">
+		UPDATE MODULE
+		<set>
+			<if test="logo != null">
+				LOGO = #{logo},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description},
+			</if>
+			<if test="url != null">
+				URL = #{url},
+			</if>
+			<if test="category != null">
+				CATEGORY = #{category},
+			</if>
+			<if test="priority != null">
+				PRIORITY = #{priority},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="findModuleById" parameterType="Long" resultMap="ModuleMap">
+		SELECT * FROM MODULE WHERE ID = #{id}
+	</select>
+	
+	<select id="pageModuleByFilter" parameterType="HashMap" resultMap="ModuleMap">
+		SELECT * FROM MODULE WHERE EXPIRED_TIME IS NULL
+		<if test="category != null">
+			AND CATEGORY = #{category}
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		<if test="name != null">
+			AND NAME LIKE #{name}
+		</if>
+		ORDER BY PRIORITY DESC,ID DESC
+	</select>
+	
+</mapper>

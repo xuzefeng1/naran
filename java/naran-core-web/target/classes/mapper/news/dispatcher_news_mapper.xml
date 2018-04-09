@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.news.DispatcherNews">
+
+	<resultMap id="dispatcherNewsMap" type="DispatcherNews">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED_TIME" property="expiredTime" jdbcType="TIMESTAMP" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="LOGO" property="logo" jdbcType="VARCHAR" />
+		
+	</resultMap>
+
+	<insert id="addDispatcherNews" parameterType="DispatcherNews" useGeneratedKeys="true" keyProperty="id">
+		insert into dispatcher_news (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		TITLE,
+		URL,
+		CONTENT,
+		LOGO
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{title,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{content,jdbcType=VARCHAR},
+		#{logo,jdbcType=VARCHAR}	
+		)
+	</insert>
+
+	<update id="updateDispatcherNews" parameterType="DispatcherNews">
+		update dispatcher_news
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME=#{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME=#{expiredTime},
+			</if>
+			<if test="title != null">
+				TITLE=#{title},
+			</if>
+			<if test="url != null">
+				URL=#{url},
+			</if>
+			<if test="logo != null">
+				LOGO=#{logo},
+			</if>
+			<if test="content != null">
+				CONTENT=#{content}
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findDispatcherNewsById" parameterType="Long" resultMap="dispatcherNewsMap">
+		SELECT * FROM DISPATCHER_NEWS WHERE ID = #{id}
+	</select>
+
+	<select id="findDispatcherNewsByFilter" parameterType="HashMap" resultMap="dispatcherNewsMap">
+		SELECT * FROM DISPATCHER_NEWS WHERE EXPIRED_TIME IS NULL
+		<if test="title != null">
+			AND (TITLE LIKE #{title})
+		</if>
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

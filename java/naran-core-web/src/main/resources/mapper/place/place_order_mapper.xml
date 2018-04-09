@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.place.PlaceOrder">
+	<resultMap id="placeOrderMap" type="PlaceOrder">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="supplierId" column="SUPPLIER_ID" jdbcType="BIGINT" />
+		<result property="orderId" column="ORDER_ID" jdbcType="BIGINT" />
+		<result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR" />
+		<result property="supplierCharger" column="SUPPLIER_CHARGER" jdbcType="VARCHAR" />
+		<result property="supplierMobile" column="SUPPLIER_MOBILE" jdbcType="VARCHAR" />
+		<result property="deliverTime" column="DELIVER_TIME" jdbcType="VARCHAR" />
+		<result property="deliverAddress" column="DELIVER_ADDRESS" jdbcType="VARCHAR" />
+		<result property="orderMoney" column="ORDER_MONEY" jdbcType="DECIMAL" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="status" column="STATUS" jdbcType="VARCHAR" />
+		
+		<result property="operatId" column="OPERAT_ID" jdbcType="BIGINT" />
+		<result property="operatName" column="OPERAT_NAME" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addPlaceOrder" parameterType="PlaceOrder" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO PLACE_ORDER (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		ORDER_ID,
+		DISPATCHER_ID,
+		SUPPLIER_ID,
+		SUPPLIER_NAME,
+		SUPPLIER_CHARGER,
+		SUPPLIER_MOBILE,
+		DELIVER_TIME,
+		DELIVER_ADDRESS,
+		ORDER_MONEY,
+		REMARK,
+		OPERAT_ID,
+		OPERAT_NAME,
+		STATUS
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{orderId,jdbcType=BIGINT},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{supplierId,jdbcType=BIGINT},
+		#{supplierName,jdbcType=VARCHAR},
+		#{supplierCharger,jdbcType=VARCHAR},
+		#{supplierMobile,jdbcType=VARCHAR},
+		#{deliverTime,jdbcType=VARCHAR},
+		#{deliverAddress,jdbcType=VARCHAR},
+		#{orderMoney,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR},
+		#{operatId,jdbcType=BIGINT},
+		#{operatName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updatePlaceOrder" parameterType="PlaceOrder">
+		UPDATE PLACE_ORDER
+		<set>
+			<if test="supplierName != null">
+				SUPPLIER_NAME = #{supplierName},
+			</if>
+
+			<if test="supplierCharger != null">
+				SUPPLIER_CHARGER = #{supplierCharger},
+			</if>
+			<if test="supplierMobile != null">
+				SUPPLIER_MOBILE = #{supplierMobile},
+			</if>
+			<if test="deliverTime != null">
+				DELIVER_TIME = #{deliverTime},
+			</if>
+			<if test="deliverAddress != null">
+				DELIVER_ADDRESS = #{deliverAddress},
+			</if>
+			<if test="orderMoney != null">
+				ORDER_MONEY = #{orderMoney},
+			</if>
+			<if test="orderId != null">
+				ORDER_ID = #{orderId},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findPlaceOrderById" parameterType="Long" resultMap="placeOrderMap">
+		SELECT * FROM PLACE_ORDER WHERE ID = #{id}
+	</select>
+
+
+	<select id="findPlaceOrderByFilter" parameterType="HashMap" resultMap="placeOrderMap">
+		SELECT * FROM PLACE_ORDER
+		WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		<if test="supplierId != null">
+			AND SUPPLIER_ID = #{supplierId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="findPlaceOrderBySupplier" parameterType="HashMap" resultMap="placeOrderMap">
+		SELECT * FROM PLACE_ORDER
+		WHERE EXPIRED_TIME IS NULL AND SUPPLIER_ID = #{supplierId} AND DISPATCHER_ID = #{dispatcherId}
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

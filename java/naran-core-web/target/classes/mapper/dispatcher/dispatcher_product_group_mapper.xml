@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.dispatcher.product.DispatcherProductGroup">
+	<resultMap id="dispatcherProductGroupMap" type="DispatcherProductGroup">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="VARCHAR" />
+		<result property="logo" column="LOGO" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR" />
+		<result property="priority" column="PRIORITY" jdbcType="INTEGER" />
+	</resultMap>
+
+	<insert id="addDispatcherProductGroup" parameterType="DispatcherProductGroup" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DISPATCHER_PRODUCT_GROUP (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		LOGO,
+		NAME,
+		DESCRIPTION,
+		PRIORITY
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{logo,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{priority,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<update id="updateDispatcherProductGroup" parameterType="DispatcherProductGroup">
+		UPDATE DISPATCHER_PRODUCT_GROUP
+		<set>
+			<if test="logo != null">
+				LOGO = #{logo},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description},
+			</if>
+			<if test="priority != null">
+				PRIORITY = #{priority},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findDispatcherProductGroupById" parameterType="Long" resultMap="dispatcherProductGroupMap">
+		SELECT * FROM DISPATCHER_PRODUCT_GROUP WHERE ID = #{id}
+	</select>
+	<select id="findDispatcherProductGroupByName" parameterType="HashMap" resultMap="dispatcherProductGroupMap">
+		SELECT * FROM DISPATCHER_PRODUCT_GROUP WHERE EXPIRED_TIME IS NULL AND (DISPATCHER_ID = #{dispatcherId} or DISPATCHER_ID is null)
+		AND NAME = #{name} limit 1
+	</select>
+
+	<select id="findDispatcherProductGroupByAll" parameterType="HashMap" resultMap="dispatcherProductGroupMap">
+		SELECT * FROM DISPATCHER_PRODUCT_GROUP
+		WHERE EXPIRED_TIME IS NULL AND (DISPATCHER_ID = #{dispatcherId} or DISPATCHER_ID is null)
+		ORDER BY DISPATCHER_ID IS NULL DESC,PRIORITY DESC
+	</select>
+	<select id="pageDispatcherProductGroupByFilter" parameterType="HashMap" resultMap="dispatcherProductGroupMap">
+		SELECT * FROM DISPATCHER_PRODUCT_GROUP
+		WHERE EXPIRED_TIME IS NULL
+		<if test="dispatcherId != null">
+			AND (DISPATCHER_ID = #{dispatcherId} or DISPATCHER_ID is null)
+		</if>
+		<if test="name != null">
+			AND NAME LIKE #{name}
+		</if>
+		ORDER BY DISPATCHER_ID IS NULL DESC,PRIORITY DESC
+	</select>
+
+
+</mapper>

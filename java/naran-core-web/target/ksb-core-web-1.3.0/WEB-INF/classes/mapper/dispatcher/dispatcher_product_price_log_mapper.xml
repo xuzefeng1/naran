@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.dispatcher.product.DispatcherProductPriceLog">
+	<resultMap id="dispatcherProductPriceLogMap" type="DispatcherProductPriceLog">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="productId" column="PRODUCT_ID" jdbcType="BIGINT"/>
+		<result property="before" column="PRICE_BEFORE" jdbcType="DECIMAL"/>
+		<result property="after" column="PRICE_AFTER" jdbcType="DECIMAL"/>
+		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addDispatcherProductPriceLog" parameterType="DispatcherProductPriceLog" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DISPATCHER_PRODUCT_PRICE_LOG (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			PRODUCT_ID,
+			PRICE_BEFORE,
+			PRICE_AFTER,
+			REMARK
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{productId,jdbcType=BIGINT},
+			#{before,jdbcType=DECIMAL},
+			#{after,jdbcType=DECIMAL},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="findDispatcherProductPriceLogByProduct" parameterType="Long" resultMap="dispatcherProductPriceLogMap">
+		SELECT * FROM DISPATCHER_PRODUCT_PRICE_LOG WHERE EXPIRED_TIME IS NULL AND PRODUCT_ID = #{productId}
+	</select>
+	
+</mapper>

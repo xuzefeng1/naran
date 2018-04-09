@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.lechuu.supplier.entity.webPrivilege.WebPrivilege">
+	<resultMap id="webPrivilegeMap" type="WebPrivilege">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="parentId" column="PARENT_ID" jdbcType="BIGINT" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="restUri" column="REST_URI" jdbcType="VARCHAR" />
+		<result property="priority" column="PRIORITY" jdbcType="INTEGER" />
+		<result property="appUse" column="APP_USE" jdbcType="BOOLEAN" />
+	</resultMap>
+
+	<insert id="addWebPrivilege" parameterType="WebPrivilege" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO WEB_PRIVILEGE (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		PARENT_ID,
+		NAME,
+		REST_URI,
+		APP_USE,
+		PRIORITY
+		)VALUES(
+		#{createTime, jdbcType=TIMESTAMP},
+		#{updateTime, jdbcType=TIMESTAMP},
+		#{expiredTime, jdbcType=TIMESTAMP},
+		#{parentId, jdbcType=BIGINT},
+		#{name, jdbcType=VARCHAR},
+		#{restUri, jdbcType=VARCHAR},
+		#{appUse,jdbcType=BOOLEAN},
+		#{priority, jdbcType=INTEGER}
+		)
+	</insert>
+
+	<update id="updateWebPrivilege" parameterType="WebPrivilege">
+		UPDATE WEB_PRIVILEGE
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="restUri != null">
+				REST_URI = #{restUri},
+			</if>
+			<if test="priority > 0">
+				PRIORITY = #{priority},
+			</if>
+			<if test="appUse != null">
+				APP_USE = #{appUse},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="deleteWebPrivilege" parameterType="Long">
+		UPDATE WEB_PRIVILEGE
+		SET UPDATE_TIME = NOW(), EXPIRED_TIME = NOW()
+		WHERE ID = #{privilegeId} OR PARENT_ID = #{privilegeId}
+	</update>
+
+	<select id="findWebPrivilegeById" parameterType="Long" resultMap="webPrivilegeMap">
+		SELECT * FROM WEB_PRIVILEGE WHERE ID = #{id}
+	</select>
+
+	<select id="findWebPrivilegeByRestUri" parameterType="String" resultMap="webPrivilegeMap">
+		SELECT * FROM WEB_PRIVILEGE WHERE REST_URI = #{restUri} AND EXPIRED_TIME IS NULL
+	</select>
+
+	<select id="findWebPrivilegeByAll" resultMap="webPrivilegeMap">
+		SELECT * FROM WEB_PRIVILEGE WHERE EXPIRED_TIME IS NULL 
+		
+		ORDER BY PRIORITY DESC
+	</select>
+
+	<select id="findWebPrivilegeByFirst" resultMap="webPrivilegeMap">
+		SELECT * FROM WEB_PRIVILEGE WHERE EXPIRED_TIME IS NULL AND PARENT_ID IS NULL ORDER BY PRIORITY DESC
+	</select>
+
+
+	<select id="findWebPrivilegeByRole" parameterType="HashMap" resultMap="webPrivilegeMap">
+		SELECT A.* FROM WEB_PRIVILEGE A LEFT JOIN RELATION_ROLE_PRIVILEGE B
+		ON A.ID = B.PRIVILEGE_ID
+		WHERE A.EXPIRED_TIME IS NULL AND B.ROLE_ID = ${roleId}
+		
+		ORDER BY A.PRIORITY DESC
+	</select>
+
+</mapper>

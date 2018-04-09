@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.points.LevelRecord">
+	<resultMap id="LevelRecordMap" type="LevelRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="LEVEL_VALUE" property="levelValue" jdbcType="BIGINT" />
+		<result column="NOW_LEVEL" property="nowLevel" jdbcType="BIGINT" />
+		<result column="ACCOUNT_ID" property="accountId" jdbcType="BIGINT" />
+		<result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addLevelRecord" parameterType="LevelRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_level_record (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, LEVEL_VALUE, NOW_LEVEL,
+		ACCOUNT_ID, BUSINESS_ID, BUSINESS_TYPE
+		)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{levelValue,jdbcType=BIGINT}, #{nowLevel,jdbcType=BIGINT},
+		#{accountId,jdbcType=BIGINT}, #{businessId,jdbcType=BIGINT}, #{businessType,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLevelRecord" parameterType="LevelRecord">
+		update naran_level_record
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="levelValue != null">
+				LEVEL_VALUE = #{levelValue,jdbcType=BIGINT},
+			</if>
+			<if test="nowLevel != null">
+				NOW_LEVEL = #{nowLevel,jdbcType=BIGINT},
+			</if>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="businessId != null">
+				BUSINESS_ID = #{businessId,jdbcType=BIGINT},
+			</if>
+			<if test="businessType != null">
+				BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findLevelRecordById" parameterType="Long" resultMap="LevelRecordMap">
+		SELECT * FROM naran_level_record WHERE ID = #{id}
+	</select>
+
+	<select id="findLevelRecordByPage" parameterType="HashMap" resultMap="LevelRecordMap">
+		SELECT * FROM naran_level_record WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.deliver.DeliverRoute">
+	<resultMap id="deliverRouteMap" type="DeliverRoute">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR" />
+		<result property="deliverCharger" column="DELIVER_CHARGER" jdbcType="VARCHAR" />
+		<result property="deliverMobile" column="DELIVER_MOBILE" jdbcType="VARCHAR" />
+		<result property="numberPlate" column="NUMBER_PLATE" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<resultMap id="relationRouteShopMap" type="RelationRouteShop">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="routeId" column="ROUTE_ID" jdbcType="BIGINT" />
+		<result property="shopId" column="SHOP_ID" jdbcType="BIGINT" />
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addDeliverRoute" parameterType="DeliverRoute" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DELIVER_ROUTE (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		NAME,
+		DESCRIPTION,
+		DELIVER_CHARGER,
+		NUMBER_PLATE,
+		DELIVER_MOBILE
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{name,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{deliverCharger,jdbcType=VARCHAR},
+		#{numberPlate,jdbcType=VARCHAR},
+		#{deliverMobile,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateDeliverRoute" parameterType="DeliverRoute">
+		UPDATE DELIVER_ROUTE
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description},
+			</if>
+			<if test="numberPlate != null">
+				NUMBER_PLATE = #{numberPlate},
+			</if>
+			<if test="deliverCharger != null">
+				DELIVER_CHARGER = #{deliverCharger},
+			</if>
+			<if test="deliverMobile != null">
+				DELIVER_MOBILE = #{deliverMobile},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findDeliverRouteById" parameterType="Long" resultMap="deliverRouteMap">
+		SELECT * FROM DELIVER_ROUTE WHERE ID = #{id}
+	</select>
+
+	<select id="pageDeliverRouteByDispatcher" parameterType="HashMap" resultMap="deliverRouteMap">
+		SELECT * FROM DELIVER_ROUTE WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} ORDER BY ID DESC
+	</select>
+
+
+
+
+
+	<insert id="addRelationRouteShop" parameterType="RelationRouteShop" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_ROUTE_SHOP (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		ROUTE_ID,
+		DISPATCHER_ID,
+		SHOP_ID
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{routeId,jdbcType=BIGINT},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{shopId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateRelationRouteShop" parameterType="RelationRouteShop">
+		UPDATE RELATION_ROUTE_SHOP
+		<set>
+			<if test="routeId != null">
+				ROUTE_ID = #{routeId},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="deleteRelationRouteShop" parameterType="RelationRouteShop">
+		DELETE FROM RELATION_ROUTE_SHOP WHERE ID = #{id}
+	</update>
+
+	<select id="findRelationRouteShopByRouteShop" parameterType="HashMap" resultMap="relationRouteShopMap">
+		SELECT * FROM RELATION_ROUTE_SHOP WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND ROUTE_ID = #{routeId} AND SHOP_ID = #{shopId}
+	</select>
+
+	<select id="findRelationRouteShopByShop" parameterType="HashMap" resultMap="relationRouteShopMap">
+		SELECT * FROM RELATION_ROUTE_SHOP WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND SHOP_ID = #{shopId}
+	</select>
+
+	<select id="pageRelationRouteShopByRoute" parameterType="HashMap" resultMap="relationRouteShopMap">
+		SELECT * FROM RELATION_ROUTE_SHOP WHERE EXPIRED_TIME IS NULL AND ROUTE_ID = #{routeId}
+	</select>
+
+	<delete id="deleteRelationRouteShopByShop" parameterType="HashMap">
+		DELETE FROM RELATION_ROUTE_SHOP WHERE DISPATCHER_ID = #{dispatcherId} AND SHOP_ID = #{shopId}
+	</delete>
+
+</mapper>

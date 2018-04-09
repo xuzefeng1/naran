@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.account.AccountRecord">
+	<resultMap id="AccountRecordMap" type="AccountRecord">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="accountId" column="ACCOUNT_ID" jdbcType="BIGINT"/>
+		<result property="deviceNo" column="DEVICE_NO" jdbcType="VARCHAR"/>
+		<result property="accessToken" column="ACCESS_TOKEN" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addAccountRecord" parameterType="AccountRecord" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ACCOUNT_RECORD (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			ACCOUNT_ID,
+			DEVICE_NO,
+			ACCESS_TOKEN
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{accountId,jdbcType=BIGINT},
+			#{deviceNo,jdbcType=VARCHAR},
+			#{accessToken,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateAccountRecord" parameterType="AccountRecord">
+		UPDATE ACCOUNT_RECORD
+		<set>
+			<if test="deviceNo != null">
+				DEVICE_NO = #{deviceNo},
+			</if>
+			<if test="accessToken != null">
+				ACCESS_TOKEN = #{accessToken},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="findAccountRecordByAccount" parameterType="String" resultMap="AccountRecordMap">
+		SELECT * FROM ACCOUNT_RECORD WHERE ACCOUNT_ID = #{accountId}
+	</select>
+	
+	<select id="findAccountRecordByAccessToken" parameterType="String" resultMap="AccountRecordMap">
+		SELECT * FROM ACCOUNT_RECORD WHERE EXPIRED_TIME IS NULL AND ACCESS_TOKEN = #{accessToken}
+	</select>
+	
+</mapper>

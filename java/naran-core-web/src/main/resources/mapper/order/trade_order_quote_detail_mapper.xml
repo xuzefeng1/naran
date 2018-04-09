@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.order.TradeOrderQuoteDetail">
+
+	<resultMap id="tradeOrderQuoteDetailMap" type="TradeOrderQuoteDetail">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED_TIME" property="expiredTime" jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="PRODUCT_ID" property="productId" jdbcType="BIGINT" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="QUOTE_ID" property="quoteId" jdbcType="BIGINT" />
+		<result column="PRICE" property="price" jdbcType="DECIMAL" />
+		<result column="UNIT" property="unit" jdbcType="VARCHAR" />
+		<result column="DISPATCHER_ID" property="dispatcherId" jdbcType="BIGINT" />
+		<result column="CISPEC" property="cispec" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addTradeOrderQuoteDetail" parameterType="TradeOrderQuoteDetail" useGeneratedKeys="true" keyProperty="id">
+		insert into trade_order_quote_detail
+		(
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		REMARK,
+		PRODUCT_ID,
+		PRODUCT_NAME,
+		QUOTE_ID,
+		PRICE,
+		UNIT,
+		DISPATCHER_ID,
+		CISPEC
+		) values (
+
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=VARCHAR},
+		#{productId,jdbcType=BIGINT},
+		#{productName,jdbcType=VARCHAR},
+		#{quoteId,jdbcType=BIGINT},
+		#{price,jdbcType=DECIMAL},
+		#{unit,jdbcType=VARCHAR},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{cispec,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateTradeOrderQuoteDetail" parameterType="TradeOrderQuoteDetail">
+		update trade_order_quote_detail
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME=#{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME=#{expiredTime},
+			</if>
+			<if test="remark != null">
+				REMARK=#{remark},
+			</if>
+			<if test="productId != null">
+				PRODUCT_ID=#{productId},
+			</if>
+			<if test="productName != null">
+				PRODUCT_NAME=#{productName},
+			</if>
+			<if test="quoteId != null">
+				QUOTE_ID=#{quoteId},
+			</if>
+			<if test="price != null">
+				PRICE=#{price},
+			</if>
+			<if test="unit != null">
+				UNIT=#{unit},
+			</if>
+			<if test="dispatcherId != null">
+				DISPATCHER_ID=#{dispatcherId},
+			</if>
+			<if test="cispec != null">
+				CISPEC=#{cispec},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findTradeOrderQuoteDetailByQuote" parameterType="Long" resultMap="tradeOrderQuoteDetailMap">
+		SELECT * FROM TRADE_ORDER_QUOTE_DETAIL WHERE EXPIRED_TIME IS NULL AND QUOTE_ID = #{quoteId}
+		<if test="name != null">
+			AND PRODUCT_NAME LIKE #{name}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="findTradeOrderQuoteDetailById" parameterType="Long" resultMap="tradeOrderQuoteDetailMap">
+		SELECT * FROM TRADE_ORDER_QUOTE_DETAIL WHERE ID = #{id}
+	</select>
+	<select id="findTradeOrderQuoteDetailByProductId" parameterType="HashMap" resultMap="tradeOrderQuoteDetailMap">
+		SELECT * FROM TRADE_ORDER_QUOTE_DETAIL WHERE EXPIRED_TIME IS NULL AND QUOTE_ID = #{quoteId} And PRODUCT_ID=#{productId}
+		limit 1
+	</select>
+
+	<update id="deleteTradeOrderQuoteDetailByQuote" parameterType="Long">
+		UPDATE TRADE_ORDER_QUOTE_DETAIL SET EXPIRED_TIME=now() WHERE QUOTE_ID = #{quoteId}
+	</update>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="localCacheScope" value="STATEMENT" />
+	</settings>
+
+	<typeAliases>
+		<!-- 短信敏感词 -->
+		<typeAlias type="com.lechuu.swing.entity.message.SensitiveWordPO" alias="SensitiveWord" />
+		
+		<!-- 短信 -->
+		<typeAlias type="com.lechuu.swing.entity.message.SmsMessagePO" alias="SmsMessage" />
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.lechuu.foundation.mybatis.plugin.SelectCountSqlInterceptor" />
+		<plugin interceptor="com.lechuu.foundation.mybatis.plugin.OffsetLimitInterceptor">
+			<property name="dialectClass" value="com.lechuu.foundation.mybatis.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+
+	<mappers>
+		<mapper resource="mapper/sensitive_word_mapper.xml" />
+		<mapper resource="mapper/sms_message_mapper.xml" />
+	</mappers>
+</configuration>

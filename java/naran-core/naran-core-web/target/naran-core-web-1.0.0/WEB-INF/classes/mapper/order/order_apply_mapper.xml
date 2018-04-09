@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.order.OrderApply">
+	<resultMap id="OrderApplyMap" type="OrderApply">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="ORDER_ID" property="orderId" jdbcType="BIGINT" />
+		<result column="ACCOUNT_ID" property="accountId" jdbcType="BIGINT" />
+		<result column="ACCOUNT_NIKE" property="accountNike" jdbcType="VARCHAR" />
+		<result column="APPLY_STATUS" property="applyStatus" jdbcType="VARCHAR" />
+		<result column="APPLY_TITLE" property="applyTitle" jdbcType="VARCHAR" />
+		<result column="APPLY_CONTENT" property="applyContent" jdbcType="VARCHAR" />
+		<result column="APPLY_IMGS" property="applyImgs" jdbcType="VARCHAR" />
+		<result column="BACKDROP_IMG" property="backdropImg" jdbcType="VARCHAR" />
+		<result column="WILLING" property="willing" jdbcType="BIT" />
+		<result column="MAIL_ADDRESS" property="mailAddress" jdbcType="VARCHAR" />
+		<result column="MAIL_NAME" property="mailName" jdbcType="VARCHAR" />
+		<result column="MAIL_PHONE" property="mailPhone" jdbcType="VARCHAR" />
+		<result column="ESTIMATE_WEIGHT" property="estimateWeight" jdbcType="VARCHAR" />
+		<result column="APPLY_PRICE" property="applyPrice" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="COUNTY" property="county" jdbcType="VARCHAR" />
+		<result column="APPLY_TYPE" property="applyType" jdbcType="VARCHAR" />
+		<result column="APPLY_ADDRESS" property="applyAddress" jdbcType="VARCHAR" />
+		<result column="BACKDROP_BOTTOM_IMG" jdbcType="VARCHAR" property="backdropBottomImg" />
+	</resultMap>
+
+	<insert id="addOrderApply" parameterType="OrderApply" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_order_apply (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, ORDER_ID, ACCOUNT_ID,
+		ACCOUNT_NIKE, APPLY_STATUS, APPLY_TITLE,
+		APPLY_CONTENT, APPLY_IMGS, BACKDROP_IMG,
+		WILLING, MAIL_ADDRESS, MAIL_NAME,
+		MAIL_PHONE, ESTIMATE_WEIGHT, APPLY_PRICE,
+		CITY, PROVINCE, COUNTY,
+		APPLY_TYPE, APPLY_ADDRESS,BACKDROP_BOTTOM_IMG)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{orderId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT},
+		#{accountNike,jdbcType=VARCHAR}, #{applyStatus,jdbcType=VARCHAR}, #{applyTitle,jdbcType=VARCHAR},
+		#{applyContent,jdbcType=VARCHAR}, #{applyImgs,jdbcType=VARCHAR}, #{backdropImg,jdbcType=VARCHAR},
+		#{willing,jdbcType=BIT},#{mailAddress,jdbcType=VARCHAR},#{mailName,jdbcType=VARCHAR},
+		#{mailPhone,jdbcType=VARCHAR}, #{estimateWeight,jdbcType=VARCHAR}, #{applyPrice,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR},
+		#{applyType,jdbcType=VARCHAR}, #{applyAddress,jdbcType=VARCHAR},#{backdropBottomImg,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateOrderApply" parameterType="OrderApply">
+		update naran_order_apply
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="orderId != null">
+				ORDER_ID = #{orderId,jdbcType=BIGINT},
+			</if>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="accountNike != null">
+				ACCOUNT_NIKE = #{accountNike,jdbcType=VARCHAR},
+			</if>
+			<if test="applyStatus != null">
+				APPLY_STATUS = #{applyStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="applyTitle != null">
+				APPLY_TITLE = #{applyTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="applyContent != null">
+				APPLY_CONTENT = #{applyContent,jdbcType=VARCHAR},
+			</if>
+			<if test="applyImgs != null">
+				APPLY_IMGS = #{applyImgs,jdbcType=VARCHAR},
+			</if>
+			<if test="backdropImg != null">
+				BACKDROP_IMG = #{backdropImg,jdbcType=VARCHAR},
+			</if>
+			<if test="willing != null">
+				WILLING = #{willing,jdbcType=BIT},
+			</if>
+			<if test="mailAddress != null">
+				MAIL_ADDRESS = #{mailAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="mailName != null">
+				MAIL_NAME = #{mailName,jdbcType=VARCHAR},
+			</if>
+			<if test="mailPhone != null">
+				MAIL_PHONE = #{mailPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="estimateWeight != null">
+				ESTIMATE_WEIGHT = #{estimateWeight,jdbcType=VARCHAR},
+			</if>
+			<if test="applyPrice != null">
+				APPLY_PRICE = #{applyPrice,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				CITY = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				PROVINCE = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="county != null">
+				COUNTY = #{county,jdbcType=VARCHAR},
+			</if>
+			<if test="applyType != null">
+				APPLY_TYPE = #{applyType,jdbcType=VARCHAR},
+			</if>
+			<if test="applyAddress != null">
+				APPLY_ADDRESS = #{applyAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="backdropBottomImg != null">
+				BACKDROP_BOTTOM_IMG = #{backdropBottomImg,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findOrderApplyById" parameterType="Long" resultMap="OrderApplyMap">
+		SELECT * FROM naran_order_apply WHERE ID = #{id}
+	</select>
+
+	<select id="findOrderApplyByAccountId" parameterType="HashMap" resultMap="OrderApplyMap">
+		SELECT * FROM naran_order_apply WHERE EXPIRED=1 AND ORDER_ID = #{orderId} AND (APPLY_STATUS='INITIAL' OR APPLY_STATUS='SUCCESS')  AND ACCOUNT_ID = #{accountId} ORDER BY ID DESC LIMIT 1
+	</select>
+
+	<select id="findOrderApplyByPage" parameterType="HashMap" resultMap="OrderApplyMap">
+		SELECT * FROM naran_order_apply WHERE EXPIRED=1
+		<if test="orderId != null">
+			AND ORDER_ID = #{orderId}
+		</if>
+		AND (APPLY_STATUS='INITIAL' OR APPLY_STATUS='SUCCESS')
+		ORDER BY ID DESC
+	</select>
+
+
+</mapper>

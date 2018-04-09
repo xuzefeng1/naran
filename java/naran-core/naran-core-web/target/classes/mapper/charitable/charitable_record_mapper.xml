@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.charitable.CharitableRecord">
+	<resultMap id="CharitableRecordMap" type="CharitableRecord">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="CHARITARIAN_ID" jdbcType="BIGINT" property="charitarianId" />
+		<result column="CHARITABLE_MONEY" jdbcType="DECIMAL" property="charitableMoney" />
+		<result column="CHARITARIAN_NAME" jdbcType="VARCHAR" property="charitarianName" />
+		<result column="CHARITABLE_DAY" jdbcType="TIMESTAMP" property="charitableDay" />
+	</resultMap>
+
+	<insert id="addCharitableRecord" parameterType="CharitableRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_charitable_record (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, CHARITARIAN_ID, CHARITABLE_MONEY,
+		CHARITARIAN_NAME, CHARITABLE_DAY)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{charitarianId,jdbcType=BIGINT}, #{charitableMoney,jdbcType=DECIMAL},
+		#{charitarianName,jdbcType=VARCHAR}, #{charitableDay,jdbcType=TIMESTAMP})
+	</insert>
+
+	<update id="updateCharitableRecord" parameterType="CharitableRecord">
+		update naran_charitable_record
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="charitarianId != null">
+				CHARITARIAN_ID = #{charitarianId,jdbcType=BIGINT},
+			</if>
+			<if test="charitableMoney != null">
+				CHARITABLE_MONEY = #{charitableMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="charitarianName != null">
+				CHARITARIAN_NAME = #{charitarianName,jdbcType=VARCHAR},
+			</if>
+			<if test="charitableDay != null">
+				CHARITABLE_DAY = #{charitableDay,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findCharitableRecordById" parameterType="Long" resultMap="CharitableRecordMap">
+		SELECT * FROM naran_charitable_record  WHERE ID = #{id}
+	</select>
+
+	<select id="findCharitableRecordByPage" parameterType="HashMap" resultMap="CharitableRecordMap">
+		SELECT * FROM naran_charitable_record WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

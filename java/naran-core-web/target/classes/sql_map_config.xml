@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="localCacheScope" value="STATEMENT" />
+	</settings>
+
+	<typeAliases>
+		<!-- 平台账号 -->
+		<typeAlias type="com.ksb.core.entity.account.Account" alias="Account" />
+		<typeAlias type="com.ksb.core.entity.account.AccountRecord" alias="AccountRecord" />
+
+		<!-- 关系/联系 -->
+		<typeAlias type="com.ksb.core.entity.relation.RelationDispatcherAccount" alias="RelationDispatcherAccount" />
+		<typeAlias type="com.ksb.core.entity.relation.RelationDispatcherShop" alias="RelationDispatcherShop" />
+		<typeAlias type="com.ksb.core.entity.relation.RelationRoleModule" alias="RelationRoleModule" />
+		<typeAlias type="com.ksb.core.entity.relation.RelationShopQuote" alias="RelationShopQuote" />
+		<typeAlias type="com.ksb.core.entity.relation.shop.DispatcherShopLevel" alias="DispatcherShopLevel" />
+		<typeAlias type="com.ksb.core.entity.relation.shop.RelationProductShopLevel" alias="RelationProductShopLevel" />
+
+
+		<!-- 配送商 -->
+		<typeAlias type="com.ksb.core.entity.dispatcher.Dispatcher" alias="Dispatcher" />
+		<typeAlias type="com.ksb.core.entity.dispatcher.DispatcherDepartment" alias="DispatcherDepartment" />
+		<typeAlias type="com.ksb.core.entity.dispatcher.product.DispatcherProduct" alias="DispatcherProduct" />
+		<typeAlias type="com.ksb.core.entity.dispatcher.product.DispatcherProductGroup" alias="DispatcherProductGroup" />
+		<typeAlias type="com.ksb.core.entity.dispatcher.product.DispatcherProductPriceLog" alias="DispatcherProductPriceLog" />
+
+
+
+		<!-- 配送商 -->
+		<typeAlias type="com.ksb.core.entity.dispatcher.Supplier" alias="Supplier" />
+
+		<!-- 库存管理 -->
+		<typeAlias type="com.ksb.core.entity.depot.DepotPurchase" alias="DepotPurchase" />
+		<typeAlias type="com.ksb.core.entity.depot.DepotSale" alias="DepotSale" />
+		<typeAlias type="com.ksb.core.entity.depot.DepotCheck" alias="DepotCheck" />
+		<typeAlias type="com.ksb.core.entity.depot.DepotPurchaseDetail" alias="DepotPurchaseDetail" />
+		<typeAlias type="com.ksb.core.entity.depot.DepotSaleDetail" alias="DepotSaleDetail" />
+
+		<!-- 标准商品库 -->
+		<typeAlias type="com.ksb.core.entity.standard.product.StandardProduct" alias="StandardProduct" />
+		<typeAlias type="com.ksb.core.entity.standard.product.StandardProductCheck" alias="StandardProductCheck" />
+		<typeAlias type="com.ksb.core.entity.standard.product.StandardProductClassification" alias="StandardProductClassification" />
+
+		<!-- 消息相关 -->
+		<typeAlias type="com.ksb.core.entity.news.DispatcherSystemMessage" alias="DispatcherSystemMessage" />
+		<typeAlias type="com.ksb.core.entity.news.DispatcherNews" alias="DispatcherNews" />
+
+		<!-- 配送相关 -->
+		<typeAlias type="com.ksb.core.entity.deliver.DeliverRoute" alias="DeliverRoute" />
+		<typeAlias type="com.ksb.core.entity.deliver.RelationRouteShop" alias="RelationRouteShop" />
+		<typeAlias type="com.ksb.core.entity.deliver.DeliverPaper" alias="DeliverPaper" />
+		<typeAlias type="com.ksb.core.entity.deliver.DeliverPaperConfig" alias="DeliverPaperConfig" />
+		<typeAlias type="com.ksb.core.entity.deliver.DeliverPaperLog" alias="DeliverPaperLog" />
+
+		<!-- 平台订单 -->
+		<typeAlias type="com.ksb.core.entity.order.TradeOrder" alias="TradeOrder" />
+		<typeAlias type="com.ksb.core.entity.order.TradeOrderDetail" alias="TradeOrderDetail" />
+		<typeAlias type="com.ksb.core.entity.order.TradeOrderLog" alias="TradeOrderLog" />
+		<typeAlias type="com.ksb.core.entity.order.TradeOrderStatistic" alias="TradeOrderStatistic" />
+		<typeAlias type="com.ksb.core.entity.order.TradeOrderTests" alias="TradeOrderTests" />
+		<typeAlias type="com.ksb.core.entity.order.TradeOrderQuote" alias="TradeOrderQuote" />
+		<typeAlias type="com.ksb.core.entity.order.TradeOrderQuoteDetail" alias="TradeOrderQuoteDetail" />
+
+		<!-- 采购 -->
+		<typeAlias type="com.ksb.core.entity.place.PlaceOrder" alias="PlaceOrder" />
+		<typeAlias type="com.ksb.core.entity.place.PlaceOrderDetail" alias="PlaceOrderDetail" />
+
+		<!-- 行政区 -->
+		<typeAlias type="com.ksb.core.entity.region.Province" alias="Province" />
+		<typeAlias type="com.ksb.core.entity.region.Town" alias="Town" />
+		<typeAlias type="com.ksb.core.entity.region.Area" alias="Area" />
+
+		<!-- 抽象业务模块 -->
+		<typeAlias type="com.ksb.core.entity.module.Module" alias="Module" />
+		<typeAlias type="com.ksb.core.entity.module.DispatcherRole" alias="DispatcherRole" />
+
+		<!-- 融云IM模块 -->
+		<typeAlias type="com.ksb.core.entity.rong.RongTopicGroup" alias="RongTopicGroup" />
+
+		<typeAlias type="com.ksb.core.entity.third.ThirdFinance" alias="ThirdFinance" />
+
+		<typeAlias type="com.ksb.core.entity.app.CommonSearch" alias="CommonSearch" />
+		<typeAlias type="com.ksb.core.entity.app.AppVersion" alias="AppVersion" />
+
+		<!-- web角色权限相关 -->
+		<typeAlias type="com.ksb.core.entity.role.WebRole" alias="WebRole" />
+		<typeAlias type="com.ksb.core.entity.role.RelationAccountRole" alias="RelationAccountRole" />
+		<typeAlias type="com.ksb.core.entity.role.RelationRolePrivilege" alias="RelationRolePrivilege" />
+		<typeAlias type="com.ksb.core.entity.role.WebPrivilege" alias="WebPrivilege" />
+
+
+		<!-- 财务相关 -->
+		<typeAlias type="com.ksb.core.entity.finance.DispatcherExpense" alias="DispatcherExpense" />
+		<typeAlias type="com.ksb.core.entity.finance.OrderPay" alias="OrderPay" />
+
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.lechuu.foundation.mybatis.plugin.SelectCountSqlInterceptor" />
+		<plugin interceptor="com.lechuu.foundation.mybatis.plugin.OffsetLimitInterceptor">
+			<property name="dialectClass" value="com.lechuu.foundation.mybatis.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+
+	<mappers>
+		<!-- 平台账号 -->
+		<mapper resource="mapper/account/account_mapper.xml" />
+		<mapper resource="mapper/account/account_record_mapper.xml" />
+
+		<!-- 关系/联系 -->
+		<mapper resource="mapper/relation/relation_dispatcher_account_mapper.xml" />
+		<mapper resource="mapper/relation/relation_dispatcher_shop_mapper.xml" />
+		<mapper resource="mapper/relation/relation_role_module_mapper.xml" />
+		<mapper resource="mapper/relation/relation_shop_quote_mapper.xml" />
+		<mapper resource="mapper/relation/shop/dispatcher_shop_level_mapper.xml" />
+		<mapper resource="mapper/relation/shop/relation_product_shop_level_mapper.xml" />
+
+		<!-- 配送商 -->
+		<mapper resource="mapper/dispatcher/dispatcher_mapper.xml" />
+		<mapper resource="mapper/dispatcher/dispatcher_department_mapper.xml" />
+		<mapper resource="mapper/dispatcher/dispatcher_product_mapper.xml" />
+		<mapper resource="mapper/dispatcher/dispatcher_product_group_mapper.xml" />
+		<mapper resource="mapper/dispatcher/dispatcher_product_price_log_mapper.xml" />
+
+		<!-- 供应商 -->
+		<mapper resource="mapper/dispatcher/supplier_mapper.xml" />
+
+		<!-- 库存管理 -->
+		<mapper resource="mapper/depot/depot_purchase_mapper.xml" />
+		<mapper resource="mapper/depot/depot_sale_mapper.xml" />
+		<mapper resource="mapper/depot/depot_check_mapper.xml" />
+		<mapper resource="mapper/depot/depot_purchase_detail_mapper.xml" />
+		<mapper resource="mapper/depot/depot_sale_detail_mapper.xml" />
+
+		<mapper resource="mapper/standard/product/standard_product_mapper.xml" />
+		<mapper resource="mapper/standard/product/standard_product_check_mapper.xml" />
+		<mapper resource="mapper/standard/product/standard_product_classification_mapper.xml" />
+
+		<mapper resource="mapper/deliver/deliver_route_mapper.xml" />
+		<mapper resource="mapper/deliver/deliver_paper_mapper.xml" />
+		<mapper resource="mapper/deliver/deliver_paper_config_mapper.xml" />
+		<mapper resource="mapper/deliver/deliver_paper_log_mapper.xml" />
+
+		<mapper resource="mapper/order/trade_order_mapper.xml" />
+		<mapper resource="mapper/order/trade_order_detail_mapper.xml" />
+		<mapper resource="mapper/order/trade_order_log_mapper.xml" />
+		<mapper resource="mapper/order/trade_order_statistic_mapper.xml" />
+		<mapper resource="mapper/order/trade_order_tests_mapper.xml" />
+		<mapper resource="mapper/order/trade_order_quote_mapper.xml" />
+		<mapper resource="mapper/order/trade_order_quote_detail_mapper.xml" />
+
+		<!-- 采购 -->
+		<mapper resource="mapper/place/place_order_mapper.xml" />
+		<mapper resource="mapper/place/place_order_detail_mapper.xml" />
+
+
+		<mapper resource="mapper/region/region_mapper.xml" />
+
+		<!-- 消息相关 -->
+		<mapper resource="mapper/news/dispatcher_system_message_mapper.xml" />
+		<mapper resource="mapper/news/dispatcher_news_mapper.xml" />
+
+		<mapper resource="mapper/module/module_mapper.xml" />
+		<mapper resource="mapper/module/dispatcher_role_mapper.xml" />
+
+		<mapper resource="mapper/rong/rong_topic_group_mapper.xml" />
+		<!-- 第三方 -->
+		<mapper resource="mapper/third/third_finance_mapper.xml" />
+
+		<mapper resource="mapper/app/app_version_mapper.xml" />
+		<mapper resource="mapper/app/common_search_mapper.xml" />
+
+		<!-- web角色权限相关 -->
+		<mapper resource="mapper/role/web_privilege_mapper.xml" />
+		<mapper resource="mapper/role/web_role_mapper.xml" />
+
+		<!-- 财务相关 -->
+		<mapper resource="mapper/finance/dispatcher_expense_mapper.xml" />
+		<mapper resource="mapper/finance/order_pay_mapper.xml" />
+
+	</mappers>
+</configuration>

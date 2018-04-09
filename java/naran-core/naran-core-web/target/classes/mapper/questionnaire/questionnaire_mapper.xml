@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.questionnaire.Questionnaire">
+	<resultMap id="QuestionnaireMap" type="Questionnaire">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="QUESTIONNAIRE_ORDER" property="questionnaireOrder" jdbcType="INTEGER" />
+		<result column="QUESTIONNAIRE_CONTENT" property="questionnaireContent" jdbcType="VARCHAR" />
+		<result column="QUESTIONNAIRE_REQUIRED" property="questionnaireRequired" jdbcType="BIT" />
+		<result column="ORDER_TYPE" property="orderType" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<insert id="addQuestionnaire" parameterType="Questionnaire" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_questionnaire (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, QUESTIONNAIRE_ORDER, QUESTIONNAIRE_CONTENT,
+		QUESTIONNAIRE_REQUIRED,ORDER_TYPE)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{questionnaireOrder,jdbcType=INTEGER}, #{questionnaireContent,jdbcType=VARCHAR},
+		#{questionnaireRequired,jdbcType=BIT},#{orderType,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateQuestionnaire" parameterType="Questionnaire">
+		update naran_questionnaire
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="questionnaireOrder != null">
+				QUESTIONNAIRE_ORDER = #{questionnaireOrder,jdbcType=INTEGER},
+			</if>
+			<if test="questionnaireContent != null">
+				QUESTIONNAIRE_CONTENT = #{questionnaireContent,jdbcType=VARCHAR},
+			</if>
+			<if test="questionnaireRequired != null">
+				QUESTIONNAIRE_REQUIRED = #{questionnaireRequired,jdbcType=BIT},
+			</if>
+			<if test="orderType != null">
+				ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findQuestionnaireById" parameterType="Long" resultMap="QuestionnaireMap">
+		SELECT * FROM naran_questionnaire WHERE ID = #{id}
+	</select>
+
+	<select id="findQuestionnaireByPage" parameterType="HashMap" resultMap="QuestionnaireMap">
+		SELECT * FROM naran_questionnaire WHERE EXPIRED=1
+		<if test="orderType != null">
+			AND ORDER_TYPE = #{orderType}
+		</if>
+		ORDER BY RAND()
+	</select>
+
+
+</mapper>

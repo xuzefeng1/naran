@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.news.DispatcherSystemMessage">
+	<resultMap id="dispatcherSystemMessageMap" type="DispatcherSystemMessage">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="applicantId" column="APPLICANT_ID" jdbcType="BIGINT" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="content" column="CONTENT" jdbcType="VARCHAR" />
+		<result property="mobile" column="MOBILE" jdbcType="VARCHAR" />
+		<result property="title" column="TITLE" jdbcType="VARCHAR" />
+		<result property="status" column="STATUS" jdbcType="VARCHAR" />
+		<result property="category" column="CATEGORY" jdbcType="VARCHAR" />
+
+
+	</resultMap>
+
+	<insert id="addDispatcherSystemMessage" parameterType="DispatcherSystemMessage" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DISPATCHER_SYSTEM_MESSAGE (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		APPLICANT_ID,
+		NAME,
+		REMARK,
+		CONTENT,
+		MOBILE,
+		TITLE,
+		STATUS,
+		CATEGORY
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+
+		#{dispatcherId,jdbcType=BIGINT},
+		#{applicantId,jdbcType=BIGINT},
+		#{name,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{content,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{category,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateDispatcherSystemMessage" parameterType="DispatcherSystemMessage">
+		UPDATE DISPATCHER_SYSTEM_MESSAGE
+		<set>
+			<if test="dispatcherId != null">
+				DISPATCHER_ID = #{dispatcherId},
+			</if>
+			<if test="applicantId != null">
+				APPLICANT_ID = #{applicantId},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="content != null">
+				CONTENT = #{content},
+			</if>
+			<if test="mobile != null">
+				MOBILE = #{mobile},
+			</if>
+			<if test="title != null">
+				TITLE = #{title},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findDispatcherSystemMessageById" parameterType="Long" resultMap="dispatcherSystemMessageMap">
+		SELECT * FROM DISPATCHER_SYSTEM_MESSAGE WHERE ID = #{id}
+	</select>
+
+	<select id="findDispatcherSystemMessageByFilter" parameterType="HashMap" resultMap="dispatcherSystemMessageMap">
+		SELECT * FROM DISPATCHER_SYSTEM_MESSAGE WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="title != null">
+			AND (NAME LIKE #{title} OR TITLE LIKE #{title})
+		</if>
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

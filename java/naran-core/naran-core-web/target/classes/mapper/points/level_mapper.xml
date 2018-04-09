@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.points.Level">
+	<resultMap id="LevelMap" type="Level">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="TOP_VALUE" property="topValue" jdbcType="BIGINT" />
+		<result column="LOW_VALUE" property="lowValue" jdbcType="BIGINT" />
+		<result column="LEVEL_NAME" property="levelName" jdbcType="VARCHAR" />
+		<result column="LEVEL_NUM" property="levelNum" jdbcType="INTEGER" />
+	</resultMap>
+
+	<insert id="addLevel" parameterType="Level" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_level (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, TOP_VALUE, LOW_VALUE,
+		LEVEL_NAME, LEVEL_NUM)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{topValue,jdbcType=BIGINT}, #{lowValue,jdbcType=BIGINT},
+		#{levelName,jdbcType=VARCHAR}, #{levelNum,jdbcType=INTEGER})
+	</insert>
+
+	<update id="updateLevel" parameterType="Level">
+		update naran_level
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="topValue != null">
+				TOP_VALUE = #{topValue,jdbcType=BIGINT},
+			</if>
+			<if test="lowValue != null">
+				LOW_VALUE = #{lowValue,jdbcType=BIGINT},
+			</if>
+			<if test="levelName != null">
+				LEVEL_NAME = #{levelName,jdbcType=VARCHAR},
+			</if>
+			<if test="levelNum != null">
+				LEVEL_NUM = #{levelNum,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findLevelById" parameterType="Long" resultMap="LevelMap">
+		SELECT * FROM naran_level WHERE ID = #{id}
+	</select>
+
+	<select id="findLevelByPage" parameterType="HashMap" resultMap="LevelMap">
+		SELECT * FROM naran_level WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

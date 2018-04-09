@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.company.CompanyFootprint">
+	<resultMap id="CompanyFootprintMap" type="CompanyFootprint">
+		<id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="FOOTPRINT_TITLE" jdbcType="VARCHAR" property="footprintTitle" />
+		<result column="FOOTPRINT_CONTENT" jdbcType="VARCHAR" property="footprintContent" />
+		<result column="FOOTPRINT_IMGS" jdbcType="VARCHAR" property="footprintImgs" />
+	</resultMap>
+
+	<insert id="addCompanyFootprint" parameterType="CompanyFootprint" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_company_footprint ( CREATE_TIME, UPDATE_TIME,
+		EXPIRED, FOOTPRINT_TITLE, FOOTPRINT_CONTENT,
+		FOOTPRINT_IMGS)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{footprintTitle,jdbcType=VARCHAR}, #{footprintContent,jdbcType=VARCHAR},
+		#{footprintImgs,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateCompanyFootprint" parameterType="CompanyFootprint">
+		update naran_company_footprint
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="footprintTitle != null">
+				FOOTPRINT_TITLE = #{footprintTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="footprintContent != null">
+				FOOTPRINT_CONTENT = #{footprintContent,jdbcType=VARCHAR},
+			</if>
+			<if test="footprintImgs != null">
+				FOOTPRINT_IMGS = #{footprintImgs,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findCompanyFootprintById" parameterType="Long" resultMap="CompanyFootprintMap">
+		SELECT * FROM naran_company_footprint WHERE ID = #{id}
+	</select>
+
+	<select id="findCompanyFootprintByPage" parameterType="HashMap" resultMap="CompanyFootprintMap">
+		SELECT * FROM naran_company_footprint WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

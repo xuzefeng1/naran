@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.deliver.DeliverPaperLog">
+	<resultMap id="deliverPaperLogMap" type="DeliverPaperLog">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="paperId" column="PAPER_ID" jdbcType="BIGINT"/>
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR"/>
+		<result property="operation" column="OPERATION" jdbcType="VARCHAR"/>
+		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addDeliverPaperLog" parameterType="DeliverPaperLog" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DELIVER_PAPER_LOG (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			PAPER_ID,
+			OPERATOR,
+			OPERATION,
+			REMARK
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{paperId,jdbcType=BIGINT},
+			#{operator,jdbcType=VARCHAR},
+			#{operation,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="findDeliverPaperLogByPaper" parameterType="Long" resultMap="deliverPaperLogMap">
+		SELECT * FROM DELIVER_PAPER_LOG WHERE EXPIRED_TIME IS NULL AND PAPER_ID = #{orderId}
+	</select>
+	
+</mapper>

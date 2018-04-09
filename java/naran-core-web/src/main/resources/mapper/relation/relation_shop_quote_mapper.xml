@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.relation.RelationShopQuote">
+
+	<resultMap id="relationShopQuoteMap" type="RelationShopQuote">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+		<result column="QUOTE_ID" property="quoteId" jdbcType="BIGINT" />
+		<result column="DISPATCHER_ID" property="dispatcherId" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addRelationShopQuote" parameterType="RelationShopQuote" useGeneratedKeys="true" keyProperty="id">
+		insert into relation_shop_quote
+		(
+		SHOP_ID,
+		QUOTE_ID,
+		DISPATCHER_ID
+		) values (
+		#{shopId,jdbcType=BIGINT},
+		#{quoteId,jdbcType=BIGINT},
+		#{dispatcherId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateRelationShopQuote" parameterType="RelationShopQuote">
+		update relation_shop_quote
+		<set>
+			<if test="shopId != null">
+				SHOP_ID=#{shopId},
+			</if>
+			<if test="quoteId != null">
+				QUOTE_ID=#{quoteId},
+			</if>
+			<if test="dispatcherId != null">
+				DISPATCHER_ID=#{dispatcherId}
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<delete id="deleteRelationShopQuote" parameterType="HashMap">
+		DELETE FROM RELATION_SHOP_QUOTE WHERE DISPATCHER_ID=#{dispatcherId} AND QUOTE_ID=#{quoteId}
+	</delete>
+
+	<select id="findRelationShopQuote" parameterType="HashMap" resultMap="relationShopQuoteMap">
+		SELECT * FROM RELATION_SHOP_QUOTE WHERE DISPATCHER_ID=#{dispatcherId} AND QUOTE_ID=#{quoteId}
+	</select>
+	<select id="findRelationShopQuoteByShop" parameterType="HashMap" resultMap="relationShopQuoteMap">
+		SELECT * FROM RELATION_SHOP_QUOTE WHERE DISPATCHER_ID=#{dispatcherId} AND QUOTE_ID=#{quoteId} AND SHOP_ID=#{shopId}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.other.Topline">
+	<resultMap id="ToplineMap" type="Topline">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="TOPLINE_TITLE" property="toplineTitle" jdbcType="VARCHAR" />
+		<result column="TOPLINE_CONTENT" property="toplineContent" jdbcType="VARCHAR" />
+		<result column="TOPLINE_TYPE" property="toplineType" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+	</resultMap>
+
+	<insert id="addTopline" parameterType="Topline" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_topline ( TOPLINE_TITLE, TOPLINE_CONTENT,
+		TOPLINE_TYPE, CREATE_TIME, UPDATE_TIME,EXPIRED)
+		values (#{toplineTitle,jdbcType=VARCHAR}, #{toplineContent,jdbcType=VARCHAR},
+		#{toplineType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT})
+	</insert>
+
+	<update id="updateTopline" parameterType="Topline">
+		update naran_topline
+		<set>
+			<if test="toplineTitle != null">
+				TOPLINE_TITLE = #{toplineTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="toplineContent != null">
+				TOPLINE_CONTENT = #{toplineContent,jdbcType=VARCHAR},
+			</if>
+			<if test="toplineType != null">
+				TOPLINE_TYPE = #{toplineType,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findToplineById" parameterType="Long" resultMap="ToplineMap">
+		SELECT * FROM naran_topline WHERE ID = #{id}
+	</select>
+
+	<select id="findToplineByPage" parameterType="HashMap" resultMap="ToplineMap">
+		SELECT * FROM naran_topline WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

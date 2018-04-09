@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.other.Stationery">
+	<resultMap id="StationeryMap" type="Stationery">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="STATIONERY_IMG" jdbcType="VARCHAR" property="stationeryImg" />
+		<result column="STATIONERY_TOP_IMG" jdbcType="VARCHAR" property="stationeryTopImg" />
+		<result column="STATIONERY_BOTTOM_IMG" jdbcType="VARCHAR" property="stationeryBottomImg" />
+		<result column="STATIONERY_TITLE" jdbcType="VARCHAR" property="stationeryTitle" />
+	</resultMap>
+
+	<insert id="addStationery" parameterType="Stationery" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_stationery (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, STATIONERY_IMG, STATIONERY_TOP_IMG,
+		STATIONERY_BOTTOM_IMG, STATIONERY_TITLE)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{stationeryImg,jdbcType=VARCHAR}, #{stationeryTopImg,jdbcType=VARCHAR},
+		#{stationeryBottomImg,jdbcType=VARCHAR}, #{stationeryTitle,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateStationery" parameterType="Stationery">
+		update naran_stationery
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="stationeryImg != null">
+				STATIONERY_IMG = #{stationeryImg,jdbcType=VARCHAR},
+			</if>
+			<if test="stationeryTopImg != null">
+				STATIONERY_TOP_IMG = #{stationeryTopImg,jdbcType=VARCHAR},
+			</if>
+			<if test="stationeryBottomImg != null">
+				STATIONERY_BOTTOM_IMG = #{stationeryBottomImg,jdbcType=VARCHAR},
+			</if>
+			<if test="stationeryTitle != null">
+				STATIONERY_TITLE = #{stationeryTitle,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findStationeryById" parameterType="Long" resultMap="StationeryMap">
+		SELECT * FROM naran_stationery WHERE ID = #{id}
+	</select>
+
+	<select id="findStationeryByPage" parameterType="HashMap" resultMap="StationeryMap">
+		SELECT * FROM naran_stationery WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

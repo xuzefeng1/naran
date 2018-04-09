@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+    http://code.alibabatech.com/schema/dubbo
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    ">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="naran-web" />
+
+	<!-- 使用zookeeper发现服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${zookeeper.host}" timeout="10000" register="true" client="zkclient" />
+	<dubbo:consumer timeout="10000" retries="0" />
+
+	<!-- 引用远程服务 -->
+
+
+	<!-- 账号 -->
+	<dubbo:reference id="accountService" interface="com.naran.dubbo.service.account.IAccountService" />
+	<!-- 慈善记录 -->
+	<dubbo:reference id="charitableRecordService" interface="com.naran.dubbo.service.charitable.ICharitableRecordService" />
+	<!-- 慈善家 -->
+	<dubbo:reference id="charitarianService" interface="com.naran.dubbo.service.charitable.ICharitarianService" />
+	<!-- 慈善机构 -->
+	<dubbo:reference id="companyService" interface="com.naran.dubbo.service.company.ICompanyService" />
+	<!-- 慈善足迹 -->
+	<dubbo:reference id="companyFootprintService" interface="com.naran.dubbo.service.company.ICompanyFootprintService" />
+	<!-- 官方文章 -->
+	<dubbo:reference id="contentService" interface="com.naran.dubbo.service.content.IContentService" />
+	<!-- 订单报名单 -->
+	<dubbo:reference id="orderApplyService" interface="com.naran.dubbo.service.order.IOrderApplyService" />
+	<!-- 订单反馈 -->
+	<dubbo:reference id="orderFeedbackService" interface="com.naran.dubbo.service.order.IOrderFeedbackService" />
+	<!-- 订单 -->
+	<dubbo:reference id="orderService" interface="com.naran.dubbo.service.order.IOrderService" />
+
+	<!-- 邮寄地址 -->
+	<dubbo:reference id="mailService" interface="com.naran.dubbo.service.other.IMailService" />
+	<!-- 轮播图 -->
+	<dubbo:reference id="publicityService" interface="com.naran.dubbo.service.other.IPublicityService" />
+	<!-- 签到记录 -->
+	<dubbo:reference id="signRecordService" interface="com.naran.dubbo.service.other.ISignRecordService" />
+	<!-- 那然快报 -->
+	<dubbo:reference id="toplineService" interface="com.naran.dubbo.service.other.IToplineService" />
+	<!-- 排行榜 -->
+	<dubbo:reference id="rankService" interface="com.naran.dubbo.service.other.IRankService" />
+	<!-- -->
+	<dubbo:reference id="stationeryService" interface="com.naran.dubbo.service.other.IStationeryService" />
+
+
+	<!-- 等级记录 -->
+	<dubbo:reference id="levelRecordService" interface="com.naran.dubbo.service.points.ILevelRecordService" />
+	<!-- 那然等级 -->
+	<dubbo:reference id="levelService" interface="com.naran.dubbo.service.points.ILevelService" />
+	<!-- 轮爱心值记录 -->
+	<dubbo:reference id="loveRecordService" interface="com.naran.dubbo.service.points.ILoveRecordService" />
+
+	<!-- 分享记录 -->
+	<dubbo:reference id="shareRecordService" interface="com.naran.dubbo.service.record.IShareRecordService" />
+	<!-- 收藏记录 -->
+	<dubbo:reference id="collectionRecordService" interface="com.naran.dubbo.service.record.ICollectionRecordService" />
+	<!-- 评论记录 -->
+	<dubbo:reference id="commentRecordService" interface="com.naran.dubbo.service.record.ICommentRecordService" />
+	<!-- 荣誉记录 -->
+	<dubbo:reference id="honorRecordService" interface="com.naran.dubbo.service.record.IHonorRecordService" />
+
+
+	<!-- 问卷 -->
+	<dubbo:reference id="questionnaireService" interface="com.naran.dubbo.service.questionnaire.IQuestionnaireService" />
+	<!-- 问卷记录 -->
+	<dubbo:reference id="questionnaireRecordService" interface="com.naran.dubbo.service.questionnaire.IQuestionnaireRecordService" />
+	<!-- 问卷选项 -->
+	<dubbo:reference id="questionnaireOptionService" interface="com.naran.dubbo.service.questionnaire.IQuestionnaireOptionService" />
+
+
+</beans>

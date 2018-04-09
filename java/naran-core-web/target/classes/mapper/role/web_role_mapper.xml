@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.role.WebRole">
+	<resultMap id="webRoleMap" type="WebRole">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="relationRolePrivilegeMap" type="RelationRolePrivilege">
+		<id property="id" column="ID" />
+		<result property="roleId" column="ROLE_ID" jdbcType="BIGINT" />
+		<result property="privilegeId" column="PRIVILEGE_ID" jdbcType="BIGINT" />
+	</resultMap>
+
+	<resultMap id="relationAccountRoleMap" type="RelationAccountRole">
+		<id property="id" column="ID" />
+		<result property="accountId" column="ACCOUNT_ID" jdbcType="BIGINT" />
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="roleId" column="ROLE_ID" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addWebRole" parameterType="WebRole" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO WEB_ROLE (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		NAME
+		)VALUES(
+		#{createTime, jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime, jdbcType=TIMESTAMP},
+		#{dispatcherId, jdbcType=BIGINT},
+		#{name, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateWebRole" parameterType="WebRole">
+		UPDATE WEB_ROLE
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findWebRoleById" parameterType="Long" resultMap="webRoleMap">
+		SELECT * FROM WEB_ROLE WHERE ID = #{id}
+	</select>
+
+	<select id="findWebRoleByName" parameterType="HashMap" resultMap="webRoleMap">
+		SELECT * FROM WEB_ROLE WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND NAME = #{name}
+	</select>
+
+	<select id="findWebRoleByDispatcher" parameterType="HashMap" resultMap="webRoleMap">
+		SELECT * FROM WEB_ROLE WHERE EXPIRED_TIME IS NULL
+		<if test="dispatcherId == null">
+			AND DISPATCHER_ID IS NULL
+		</if>
+		<if test="dispatcherId != null">
+			AND (DISPATCHER_ID IS NULL OR DISPATCHER_ID = #{dispatcherId})
+		</if>
+		ORDER BY DISPATCHER_ID, ID
+	</select>
+
+
+
+	<insert id="addRelationRolePrivilege" parameterType="RelationRolePrivilege" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_ROLE_PRIVILEGE (
+		ROLE_ID,
+		PRIVILEGE_ID
+		)VALUES(
+		#{roleId, jdbcType=BIGINT},
+		#{privilegeId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<delete id="deleteRelationRolePrivilegeByRole" parameterType="HashMap">
+		DELETE FROM RELATION_ROLE_PRIVILEGE WHERE ROLE_ID = ${roleId}
+	</delete>
+
+	<insert id="addRelationAccountRole" parameterType="RelationAccountRole" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_ACCOUNT_ROLE (
+		ACCOUNT_ID,
+		DISPATCHER_ID,
+		ROLE_ID
+		)VALUES(
+		#{accountId, jdbcType=BIGINT},
+		#{dispatcherId,
+		jdbcType=BIGINT},
+		#{roleId, jdbcType=BIGINT}
+		)
+	</insert>
+
+	<delete id="deleteRelationAccountRoleByAccount" parameterType="HashMap">
+		DELETE FROM RELATION_ACCOUNT_ROLE WHERE ACCOUNT_ID = ${accountId} AND DISPATCHER_ID=${dispatcherId}
+	</delete>
+
+	<select id="findWebRoleByAccount" parameterType="HashMap" resultMap="webRoleMap">
+		SELECT a.* FROM WEB_ROLE a LEFT JOIN RELATION_ACCOUNT_ROLE b
+		ON a.ID = b.ROLE_ID
+		WHERE b.ACCOUNT_ID = ${accountId} AND b.DISPATCHER_ID= ${dispatcherId} AND
+		a.EXPIRED_TIME IS NULL
+	</select>
+
+	<select id="findWebRole" parameterType="HashMap" resultMap="webRoleMap">
+		SELECT a.* FROM WEB_ROLE a LEFT JOIN RELATION_ACCOUNT_ROLE b
+		ON a.ID = b.ROLE_ID
+		WHERE b.ACCOUNT_ID = ${accountId} AND b.DISPATCHER_ID= ${dispatcherId} AND a.EXPIRED_TIME
+		IS NULL
+	</select>
+
+</mapper>

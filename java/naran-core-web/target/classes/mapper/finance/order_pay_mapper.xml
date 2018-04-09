@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.finance.OrderPay">
+
+	<resultMap id="orderPayMap" type="OrderPay">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED_TIME" property="expiredTime" jdbcType="TIMESTAMP" />
+
+		<result column="ORDER_TIME" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="CHARGER" property="charger" jdbcType="VARCHAR" />
+		<result column="MONEY" property="money" jdbcType="DECIMAL" />
+		<result column="TOTAL_MONEY" property="totalMoney" jdbcType="DECIMAL" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="DISPATCHER_ID" property="dispatcherId" jdbcType="BIGINT" />
+		<result column="ORDER_ID" property="orderId" jdbcType="BIGINT" />
+		<result column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addOrderPay" parameterType="OrderPay" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ORDER_PAY (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		ORDER_TIME,
+		DISPATCHER_ID,
+		SHOP_ID,
+		ORDER_ID,
+		CHARGER,
+		MONEY,
+		TOTAL_MONEY,
+		REMARK
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{orderTime,jdbcType=TIMESTAMP},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{shopId,jdbcType=BIGINT},
+		#{orderId,jdbcType=BIGINT},
+		#{charger,jdbcType=VARCHAR},
+		#{money,jdbcType=DECIMAL},
+		#{totalMoney,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateOrderPay" parameterType="OrderPay">
+		UPDATE ORDER_PAY
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME=#{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME=#{expiredTime},
+			</if>
+			<if test="money != null">
+				MONEY=#{money},
+			</if>
+			<if test="remark != null">
+				REMARK=#{remark},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+
+	<select id="findOrderPayById" parameterType="Long" resultMap="orderPayMap">
+		SELECT * FROM ORDER_PAY WHERE ID = #{id}
+	</select>
+
+	<select id="findOrderPayByOrder" parameterType="HashMap" resultMap="orderPayMap">
+		SELECT * FROM ORDER_PAY WHERE EXPIRED_TIME IS NULL AND ORDER_ID = #{orderId} ORDER BY ID DESC
+	</select>
+
+	<select id="findOrderPayByFilter" parameterType="HashMap" resultMap="orderPayMap">
+		SELECT * FROM ORDER_PAY WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="shopId != null">
+			AND SHOP_ID = #{shopId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

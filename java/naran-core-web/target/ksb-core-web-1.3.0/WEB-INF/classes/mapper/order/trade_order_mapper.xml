@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.order.TradeOrder">
+	<resultMap id="tradeOrderMap" type="TradeOrder">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="dispatcherName" column="DISPATCHER_NAME" jdbcType="VARCHAR" />
+		<result property="dispatcherCharger" column="DISPATCHER_CHARGER" jdbcType="VARCHAR" />
+		<result property="dispatcherMobile" column="DISPATCHER_MOBILE" jdbcType="VARCHAR" />
+		<result property="dispatcherAddress" column="DISPATCHER_ADDRESS" jdbcType="VARCHAR" />
+		<result property="shopId" column="SHOP_ID" jdbcType="BIGINT" />
+		<result property="shopName" column="SHOP_NAME" jdbcType="VARCHAR" />
+		<result property="shopCharger" column="SHOP_CHARGER" jdbcType="VARCHAR" />
+		<result property="shopMobile" column="SHOP_MOBILE" jdbcType="VARCHAR" />
+		<result property="orderNo" column="ORDER_NO" jdbcType="VARCHAR" />
+		<result property="deliverTime" column="DELIVER_TIME" jdbcType="TIMESTAMP" />
+		<result property="deliverTimeDetail" column="DELIVER_TIME_DETAIL" jdbcType="VARCHAR" />
+
+		<result property="deliverAddress" column="DELIVER_ADDRESS" jdbcType="VARCHAR" />
+		<result property="orderMoney" column="ORDER_MONEY" jdbcType="DECIMAL" />
+		<result property="totalMoney" column="TOTAL_MONEY" jdbcType="DECIMAL" />
+		<result property="cashMoney" column="CASH_MONEY" jdbcType="DECIMAL" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="status" column="STATUS" jdbcType="VARCHAR" />
+		<result property="payStatus" column="PAY_STATUS" jdbcType="VARCHAR" />
+		<result property="smsStatus" column="SMS_STATUS" jdbcType="VARCHAR" />
+		<result property="reviewedStatus" column="REVIEWED_STATUS" jdbcType="VARCHAR" />
+
+		<result property="routeId" column="ROUTE_ID" jdbcType="BIGINT" />
+
+	</resultMap>
+
+	<insert id="addTradeOrder" parameterType="TradeOrder" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TRADE_ORDER (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		DISPATCHER_NAME,
+		DISPATCHER_CHARGER,
+		DISPATCHER_MOBILE,
+		DISPATCHER_ADDRESS,
+		SHOP_ID,
+		SHOP_NAME,
+		SHOP_CHARGER,
+		SHOP_MOBILE,
+		ORDER_NO,
+		DELIVER_TIME,
+		DELIVER_TIME_DETAIL,
+		DELIVER_ADDRESS,
+		ORDER_MONEY,
+		TOTAL_MONEY,
+		CASH_MONEY,
+		REMARK,
+		STATUS,
+		PAY_STATUS,
+		ROUTE_ID,
+		SMS_STATUS
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{dispatcherName,jdbcType=VARCHAR},
+		#{dispatcherCharger,jdbcType=VARCHAR},
+		#{dispatcherMobile,jdbcType=VARCHAR},
+		#{dispatcherAddress,jdbcType=VARCHAR},
+		#{shopId,jdbcType=BIGINT},
+		#{shopName,jdbcType=VARCHAR},
+		#{shopCharger,jdbcType=VARCHAR},
+		#{shopMobile,jdbcType=VARCHAR},
+		#{orderNo,jdbcType=VARCHAR},
+		#{deliverTime,jdbcType=VARCHAR},
+		#{deliverTimeDetail,jdbcType=VARCHAR},
+		#{deliverAddress,jdbcType=VARCHAR},
+		#{orderMoney,jdbcType=DECIMAL},
+		#{totalMoney,jdbcType=DECIMAL},
+		#{cashMoney,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{payStatus,jdbcType=VARCHAR},
+		#{routeId,jdbcType=BIGINT},
+		#{smsStatus,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateTradeOrder" parameterType="TradeOrder">
+		UPDATE TRADE_ORDER
+		<set>
+			<if test="shopName != null">
+				SHOP_NAME = #{shopName},
+			</if>
+			<if test="reviewedStatus != null">
+				REVIEWED_STATUS = #{reviewedStatus},
+			</if>
+			<if test="deliverTimeDetail != null">
+				DELIVER_TIME_DETAIL = #{deliverTimeDetail},
+			</if>
+			<if test="shopCharger != null">
+				SHOP_CHARGER = #{shopCharger},
+			</if>
+			<if test="shopMobile != null">
+				SHOP_MOBILE = #{shopMobile},
+			</if>
+			<if test="deliverTime != null">
+				DELIVER_TIME = #{deliverTime},
+			</if>
+			<if test="deliverAddress != null">
+				DELIVER_ADDRESS = #{deliverAddress},
+			</if>
+			<if test="orderMoney != null">
+				ORDER_MONEY = #{orderMoney},
+			</if>
+			<if test="totalMoney != null">
+				TOTAL_MONEY = #{totalMoney},
+			</if>
+			<if test="cashMoney != null">
+				CASH_MONEY = #{cashMoney},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="routeId != null">
+				ROUTE_ID = #{routeId},
+			</if>
+			<if test="payStatus != null">
+				PAY_STATUS = #{payStatus},
+			</if>
+			<if test="smsStatus != null">
+				SMS_STATUS = #{smsStatus},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findTradeOrderById" parameterType="Long" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER WHERE ID = #{id}
+	</select>
+	
+	<select id="findBackTradeOrder" parameterType="HashMap" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER WHERE  EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND ID &lt; #{orderId} LIMIT 1
+	</select>
+	<select id="findNextTradeOrder" parameterType="HashMap" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER WHERE  EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND ID &gt; #{orderId} LIMIT 1
+	</select>
+	
+
+	<select id="findTradeOrderBySmsStatus" parameterType="String" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER WHERE EXPIRED_TIME IS NULL AND STATUS='COMPLETE' AND PAY_STATUS='INIT' AND SMS_STATUS = #{smsStatus}
+	</select>
+
+
+	<select id="findTradeOrderByToConfirm" parameterType="Long" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND STATUS = 'INIT'
+	</select>
+
+	<select id="findTradeOrderByFilter" parameterType="HashMap" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER
+		WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="startDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="orderNo != null">
+			AND ID LIKE #{orderNo}
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		<if test="payStatus != null">
+			AND PAY_STATUS = #{payStatus}
+		</if>
+		<if test="shopId != null">
+			AND SHOP_ID = #{shopId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="findTradeOrderByRoute" parameterType="HashMap" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER
+		WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND STATUS='GOING'
+		AND ROUTE_ID = #{routeId}
+		<if test="startDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') = date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="findTradeOrderByShop" parameterType="HashMap" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER
+		WHERE EXPIRED_TIME IS NULL AND SHOP_ID = #{shopId}
+		<if test="startDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="dispatcherId != null">
+			AND DISPATCHER_ID = #{dispatcherId}
+		</if>
+		<if test="orderNo != null">
+			AND ID LIKE #{orderNo}
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="statisticTradeOrder" parameterType="HashMap" resultMap="tradeOrderMap">
+		SELECT * FROM TRADE_ORDER
+		WHERE EXPIRED_TIME IS NULL AND STATUS != 'INVALID'
+		<if test="dispatcherId != null">
+			AND DISPATCHER_ID = #{dispatcherId}
+		</if>
+		<if test="shopId != null">
+			AND SHOP_ID = #{shopId}
+		</if>
+		<if test="status != null">
+			AND STATUS = #{status}
+		</if>
+		<if test="startDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+
+		ORDER BY ID
+	</select>
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.order.TradeOrderQuote">
+
+	<resultMap id="tradeOrderQuoteMap" type="TradeOrderQuote">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED_TIME" property="expiredTime" jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DISPATCHER_ID" property="dispatcherId" jdbcType="BIGINT" />
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<insert id="addTradeOrderQuote" parameterType="TradeOrderQuote" useGeneratedKeys="true" keyProperty="id">
+		insert into trade_order_quote
+		(
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		REMARK,
+		NAME,
+		DISPATCHER_ID,
+		START_TIME,
+		END_TIME
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{startTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updateTradeOrderQuote" parameterType="TradeOrderQuote">
+		update trade_order_quote
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME=#{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME=#{expiredTime},
+			</if>
+			<if test="remark != null">
+				REMARK=#{remark},
+			</if>
+			<if test="name != null">
+				NAME=#{name},
+			</if>
+			<if test="dispatcherId != null">
+				DISPATCHER_ID=#{dispatcherId},
+			</if>
+			<if test="startTime != null">
+				START_TIME=#{startTime},
+			</if>
+			<if test="endTime != null">
+				END_TIME=#{endTime},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findTradeOrderQuoteById" parameterType="Long" resultMap="tradeOrderQuoteMap">
+		SELECT * FROM TRADE_ORDER_QUOTE WHERE ID = #{quoteId}
+	</select>
+
+
+
+	<select id="findQuoteOrderByFilter" parameterType="HashMap" resultMap="tradeOrderQuoteMap">
+		SELECT * FROM TRADE_ORDER_QUOTE Q
+		<if test="shopId != null">
+			LEFT JOIN RELATION_SHOP_QUOTE R ON R.QUOTE_ID=Q.ID
+		</if>
+		WHERE Q.EXPIRED_TIME IS NULL AND Q.DISPATCHER_ID = #{dispatcherId}
+		<if test="startDate != null">
+			AND date_format(Q.END_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+			AND date_format(Q.START_TIME,'%Y-%m-%d') &lt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="shopId != null">
+			AND R.SHOP_ID = #{shopId}
+		</if>
+		ORDER BY Q.ID DESC
+	</select>
+
+</mapper>

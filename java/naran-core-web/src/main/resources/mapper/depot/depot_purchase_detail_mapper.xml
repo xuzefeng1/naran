@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.depot.DepotPurchaseDetail">
+	<resultMap id="depotPurchaseDetailMap" type="DepotPurchaseDetail">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="purchaseId" column="PURCHASE_ID" jdbcType="BIGINT" />
+		<result property="productId" column="PRODUCT_ID" jdbcType="BIGINT" />
+		<result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR" />
+		<result property="productCode" column="PRODUCT_CODE" jdbcType="VARCHAR" />
+		<result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR" />
+		<result property="productPrice" column="PRODUCT_PRICE" jdbcType="DECIMAL" />
+		<result property="amount" column="AMOUNT" jdbcType="DECIMAL" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="productCispec" column="PRODUCT_CISPEC" jdbcType="VARCHAR" />
+		<result property="productBrand" column="PRODUCT_BRAND" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addDepotPurchaseDetail" parameterType="DepotPurchaseDetail" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DEPOT_PURCHASE_DETAIL (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		PURCHASE_ID,
+		PRODUCT_ID,
+		PRODUCT_NAME,
+		PRODUCT_CODE,
+		PRODUCT_UNIT,
+		PRODUCT_PRICE,
+		REMARK,
+		PRODUCT_CISPEC,
+		PRODUCT_BRAND,
+		AMOUNT
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+
+		#{dispatcherId,jdbcType=BIGINT},
+		#{purchaseId,jdbcType=BIGINT},
+		#{productId,jdbcType=BIGINT},
+		#{productName,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},
+		#{productUnit,jdbcType=VARCHAR},
+		#{productPrice,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR},
+		#{productCispec,jdbcType=VARCHAR},
+		#{productBrand,jdbcType=VARCHAR},
+		#{amount,jdbcType=DECIMAL}
+
+		)
+	</insert>
+
+	<update id="updateDepotPurchaseDetail" parameterType="DepotPurchaseDetail">
+		UPDATE DEPOT_PURCHASE_DETAIL
+		<set>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime},
+			</if>
+
+			<if test="dispatcherId != null">
+				DISPATCHER_ID = #{dispatcherId},
+			</if>
+			<if test="dispatcherName != null">
+				DISPATCHER_NAME = #{dispatcherName},
+			</if>
+			<if test="productId != null">
+				PRODUCT_ID = #{productId},
+			</if>
+			<if test="productName != null">
+				PRODUCT_NAME = #{productName},
+			</if>
+			<if test="productCode != null">
+				PRODUCT_CODE = #{productCode},
+			</if>
+			<if test="productUnit != null">
+				PRODUCT_UNIT = #{productUnit},
+			</if>
+			<if test="productPrice != null">
+				PRODUCT_PRICE = #{productPrice},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findDepotPurchaseDetailById" parameterType="Long" resultMap="depotPurchaseDetailMap">
+		SELECT * FROM DEPOT_PURCHASE_DETAIL WHERE ID = #{id}
+	</select>
+
+	<select id="findDepotPurchaseDetailByFilter" parameterType="HashMap" resultMap="depotPurchaseDetailMap">
+		SELECT * FROM DEPOT_PURCHASE_DETAIL WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="filter != null">
+			AND PRODUCT_NAME LIKE #{filter}
+		</if>
+		<if test="productId != null">
+			AND PRODUCT_ID = #{productId}
+		</if>
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="findDepotPurchaseDetailByPurchaseId" parameterType="Long" resultMap="depotPurchaseDetailMap">
+		SELECT * FROM DEPOT_PURCHASE_DETAIL WHERE EXPIRED_TIME IS NULL AND PURCHASE_ID = #{purchaseId}
+	</select>
+
+
+</mapper>

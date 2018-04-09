@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.standard.product.StandardProductClassification">
+	<resultMap id="standardProductClassificationMap" type="StandardProductClassification">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="logo" column="LOGO" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR" />
+		<result property="code" column="CODE" jdbcType="VARCHAR" />
+		<result property="parentId" column="PARENT_ID" jdbcType="BIGINT" />
+		<result property="inhibitionRate" column="INHIBITION_RATE" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<insert id="addStandardProductClassification" parameterType="StandardProductClassification" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO STANDARD_PRODUCT_CLASSIFICATION (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		LOGO,
+		NAME,
+		DESCRIPTION,
+		CODE,
+		INHIBITION_RATE,
+		PARENT_ID
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{logo,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR},
+		#{inhibitionRate,jdbcType=VARCHAR},
+		#{parentId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateStandardProductClassification" parameterType="StandardProductClassification">
+		UPDATE STANDARD_PRODUCT_CLASSIFICATION
+		<set>
+			<if test="logo != null">
+				LOGO = #{logo},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description},
+			</if>
+			<if test="code != null">
+				CODE = #{code},
+			</if>
+			<if test="inhibitionRate != null">
+				INHIBITION_RATE = #{inhibitionRate},
+			</if>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findStandardProductClassificationById" parameterType="Long" resultMap="standardProductClassificationMap">
+		SELECT * FROM STANDARD_PRODUCT_CLASSIFICATION WHERE ID = #{id}
+	</select>
+	<select id="findStandardProductClassificationByCode" parameterType="HashMap" resultMap="standardProductClassificationMap">
+		SELECT * FROM STANDARD_PRODUCT_CLASSIFICATION WHERE
+		CODE=#{code}
+		<if test="id != null">
+		<![CDATA[ 
+		AND ID <> #{id}
+		]]>
+		</if>
+		limit 1
+	</select>
+
+	<select id="findStandardProductClassificationByFirst" parameterType="HashMap" resultMap="standardProductClassificationMap">
+		SELECT * FROM STANDARD_PRODUCT_CLASSIFICATION
+		WHERE EXPIRED_TIME IS NULL AND (PARENT_ID IS NULL OR PARENT_ID = 0)
+		ORDER BY CODE DESC
+	</select>
+
+	<select id="findStandardProductClassificationByParent" parameterType="HashMap" resultMap="standardProductClassificationMap">
+		SELECT * FROM STANDARD_PRODUCT_CLASSIFICATION
+		WHERE EXPIRED_TIME IS NULL AND PARENT_ID = #{parentId}
+		ORDER BY CODE DESC
+	</select>
+
+	<select id="findStandardProductClassificationByChildName" parameterType="HashMap" resultMap="standardProductClassificationMap">
+		SELECT * FROM STANDARD_PRODUCT_CLASSIFICATION
+		WHERE EXPIRED_TIME IS NULL AND PARENT_ID = #{parentId}
+		AND NAME = #{childClassificationName}
+		LIMIT 1
+	</select>
+	<select id="findStandardProductClassificationByParentName" parameterType="String" resultMap="standardProductClassificationMap">
+		SELECT * FROM STANDARD_PRODUCT_CLASSIFICATION
+		WHERE EXPIRED_TIME IS NULL AND NAME = #{parentClassificationName}
+		AND (PARENT_ID IS NULL OR
+		PARENT_ID = 0)
+		LIMIT 1
+	</select>
+
+
+
+
+</mapper>

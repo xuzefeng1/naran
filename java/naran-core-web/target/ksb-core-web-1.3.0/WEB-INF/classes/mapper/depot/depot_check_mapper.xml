@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.depot.DepotCheck">
+	<resultMap id="depotCheckMap" type="DepotCheck">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="productId" column="PRODUCT_ID" jdbcType="BIGINT" />
+		<result property="depotTop" column="DEPOT_TOP" jdbcType="DECIMAL" />
+		<result property="depotDown" column="DEPOT_DOWN" jdbcType="DECIMAL" />
+		<result property="amount" column="AMOUNT" jdbcType="DECIMAL" />
+
+
+	</resultMap>
+
+	<insert id="addDepotCheck" parameterType="DepotCheck" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DEPOT_CHECK (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		
+		DISPATCHER_ID,
+		PRODUCT_ID,
+		DEPOT_TOP,
+		DEPOT_DOWN,
+		AMOUNT
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+
+		#{dispatcherId,jdbcType=BIGINT},
+		#{productId,jdbcType=BIGINT},
+		#{depotTop,jdbcType=DECIMAL},
+		#{depotDown,jdbcType=DECIMAL},
+		#{amount,jdbcType=DECIMAL}
+
+
+
+		)
+	</insert>
+
+	<update id="updateDepotCheck" parameterType="DepotCheck">
+		UPDATE DEPOT_CHECK
+		<set>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime},
+			</if>
+			<if test="dispatcherId != null">
+				DISPATCHER_ID = #{dispatcherId},
+			</if>
+			<if test="productId != null">
+				PRODUCT_ID = #{productId},
+			</if>
+			<if test="depotTop != null">
+				DEPOT_TOP = #{depotTop},
+			</if>
+			<if test="depotDown != null">
+				DEPOT_DOWN = #{depotDown},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount}
+			</if>
+
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findDepotCheckById" parameterType="Long" resultMap="depotCheckMap">
+		SELECT * FROM DEPOT_CHECK WHERE ID = #{id}
+	</select>
+	<select id="findDepotCheckByProduct" parameterType="Long" resultMap="depotCheckMap">
+		SELECT * FROM DEPOT_CHECK WHERE PRODUCT_ID = #{productId}
+	</select>
+
+
+
+</mapper>

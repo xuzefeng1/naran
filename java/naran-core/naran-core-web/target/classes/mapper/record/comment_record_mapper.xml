@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.record.CommentRecord">
+	<resultMap id="CommentRecordMap" type="CommentRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+		<result column="INITIATOR_ID" property="initiatorId" jdbcType="BIGINT" />
+		<result column="INITIATOR_NIKE" property="initiatorNike" jdbcType="VARCHAR" />
+		<result column="RECIPIENT_ID" property="recipientId" jdbcType="BIGINT" />
+		<result column="RECIPIENT_NIKE" property="recipientNike" jdbcType="VARCHAR" />
+		<result column="COMMENT_CONTENT" property="commentContent" jdbcType="VARCHAR" />
+		<result column="COMMENTED_ID" jdbcType="BIGINT" property="commentedId" />
+		<result column="COMMENTED_TOP_ID" jdbcType="BIGINT" property="commentedTopId" />
+	</resultMap>
+
+	<insert id="addCommentRecord" parameterType="CommentRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_comment_record (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, BUSINESS_ID, BUSINESS_TYPE,
+		INITIATOR_ID, INITIATOR_NIKE, RECIPIENT_ID,
+		RECIPIENT_NIKE, COMMENT_CONTENT, COMMENTED_ID,COMMENTED_TOP_ID)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{businessId,jdbcType=BIGINT}, #{businessType,jdbcType=VARCHAR},
+		#{initiatorId,jdbcType=BIGINT}, #{initiatorNike,jdbcType=VARCHAR}, #{recipientId,jdbcType=BIGINT},
+		#{recipientNike,jdbcType=VARCHAR}, #{commentContent,jdbcType=VARCHAR}, #{commentedId,jdbcType=BIGINT},
+		#{commentedTopId,jdbcType=BIGINT})
+	</insert>
+
+	<update id="updateCommentRecord" parameterType="CommentRecord">
+		update naran_comment_record
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="businessId != null">
+				BUSINESS_ID = #{businessId,jdbcType=BIGINT},
+			</if>
+			<if test="businessType != null">
+				BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+			</if>
+			<if test="initiatorId != null">
+				INITIATOR_ID = #{initiatorId,jdbcType=BIGINT},
+			</if>
+			<if test="initiatorNike != null">
+				INITIATOR_NIKE = #{initiatorNike,jdbcType=VARCHAR},
+			</if>
+			<if test="recipientId != null">
+				RECIPIENT_ID = #{recipientId,jdbcType=BIGINT},
+			</if>
+			<if test="recipientNike != null">
+				RECIPIENT_NIKE = #{recipientNike,jdbcType=VARCHAR},
+			</if>
+			<if test="commentContent != null">
+				COMMENT_CONTENT = #{commentContent,jdbcType=VARCHAR},
+			</if>
+			<if test="commentedId != null">
+				COMMENTED_ID = #{commentedId,jdbcType=BIGINT},
+			</if>
+			<if test="commentedTopId != null">
+				COMMENTED_TOP_ID = #{commentedTopId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findCommentRecordById" parameterType="Long" resultMap="CommentRecordMap">
+		SELECT * FROM naran_comment_record WHERE ID = #{id}
+	</select>
+
+	<select id="findCommentRecordByAccount" parameterType="HashMap" resultMap="CommentRecordMap">
+		SELECT * FROM naran_comment_record WHERE EXPIRED=1 AND INITIATOR_ID = #{initiatorId} AND BUSINESS_ID = #{businessId} AND BUSINESS_TYPE = #{businessType} LIMIT 1
+	</select>
+
+
+	<select id="findCommentRecordByPage" parameterType="HashMap" resultMap="CommentRecordMap">
+		SELECT * FROM naran_comment_record WHERE EXPIRED=1
+		<if test="businessId != null">
+			AND BUSINESS_ID = #{businessId}
+		</if>
+		<if test="businessType != null">
+			AND BUSINESS_TYPE = #{businessType}
+		</if>
+		<choose>
+			<when test="commentedTopId != null">
+				AND COMMENTED_TOP_ID = #{commentedTopId}
+			</when>
+			<otherwise>
+				AND COMMENTED_TOP_ID IS NULL
+			</otherwise>
+		</choose>
+
+		ORDER BY ID ASC
+	</select>
+
+
+</mapper>

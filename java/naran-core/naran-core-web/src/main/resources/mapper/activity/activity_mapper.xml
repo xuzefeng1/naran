@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.activity.Activity">
+	<resultMap id="ActivityMap" type="Activity">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="ACTIVITY_TYPE" jdbcType="VARCHAR" property="activityType" />
+		<result column="ACTIVITY_TITLE" jdbcType="VARCHAR" property="activityTitle" />
+		<result column="ACTIVITY_CONTENT" jdbcType="VARCHAR" property="activityContent" />
+		<result column="ACTIVITY_DAY" jdbcType="VARCHAR" property="activityDay" />
+		<result column="ACTIVITY_ADDRESS" jdbcType="VARCHAR" property="activityAddress" />
+		<result column="ACTIVITY_IMG" jdbcType="VARCHAR" property="activityImg" />
+		<result column="ACTIVITY_STATUS" jdbcType="VARCHAR" property="activityStatus" />
+		<result column="APPLY_TIME" jdbcType="TIMESTAMP" property="applyTime" />
+		<result column="APPLY_TIMES" jdbcType="INTEGER" property="applyTimes" />
+		<result column="COMMENT_TIMES" jdbcType="INTEGER" property="commentTimes" />
+		<result column="SHARE_TIMES" jdbcType="INTEGER" property="shareTimes" />
+		<result column="APPLY_STATUS" jdbcType="VARCHAR" property="applyStatus" />
+	</resultMap>
+
+	<insert id="addActivity" parameterType="Activity" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_activity (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, ACTIVITY_TYPE, ACTIVITY_TITLE,
+		ACTIVITY_CONTENT, ACTIVITY_DAY, ACTIVITY_ADDRESS,
+		ACTIVITY_IMG, ACTIVITY_STATUS, APPLY_TIME,
+		APPLY_TIMES, COMMENT_TIMES, SHARE_TIMES, APPLY_STATUS)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{activityType,jdbcType=VARCHAR}, #{activityTitle,jdbcType=VARCHAR},
+		#{activityContent,jdbcType=VARCHAR}, #{activityDay,jdbcType=VARCHAR}, #{activityAddress,jdbcType=VARCHAR},
+		#{activityImg,jdbcType=VARCHAR}, #{activityStatus,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP},
+		#{applyTimes,jdbcType=INTEGER}, #{commentTimes,jdbcType=INTEGER},
+		#{shareTimes,jdbcType=INTEGER}, #{applyStatus,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateActivity" parameterType="Activity">
+		update naran_activity
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="activityType != null">
+				ACTIVITY_TYPE = #{activityType,jdbcType=VARCHAR},
+			</if>
+			<if test="activityTitle != null">
+				ACTIVITY_TITLE = #{activityTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="activityContent != null">
+				ACTIVITY_CONTENT = #{activityContent,jdbcType=VARCHAR},
+			</if>
+			<if test="activityDay != null">
+				ACTIVITY_DAY = #{activityDay,jdbcType=VARCHAR},
+			</if>
+			<if test="activityAddress != null">
+				ACTIVITY_ADDRESS = #{activityAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="activityImg != null">
+				ACTIVITY_IMG = #{activityImg,jdbcType=VARCHAR},
+			</if>
+			<if test="activityStatus != null">
+				ACTIVITY_STATUS = #{activityStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="applyTime != null">
+				APPLY_TIME = #{applyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applyTimes != null">
+				APPLY_TIMES = #{applyTimes,jdbcType=INTEGER},
+			</if>
+			<if test="commentTimes != null">
+				COMMENT_TIMES = #{commentTimes,jdbcType=INTEGER},
+			</if>
+			<if test="shareTimes != null">
+				SHARE_TIMES = #{shareTimes,jdbcType=INTEGER},
+			</if>
+			<if test="applyStatus != null">
+				APPLY_STATUS = #{applyStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+
+	<select id="findActivityById" parameterType="Long" resultMap="ActivityMap">
+		SELECT * FROM naran_activity WHERE ID = #{id}
+	</select>
+
+	<select id="findActivityByPage" parameterType="HashMap" resultMap="ActivityMap">
+		SELECT * FROM naran_activity WHERE EXPIRED=1
+		<if test="activityType != null">
+			AND ACTIVITY_TYPE = #{activityType}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+
+</mapper>

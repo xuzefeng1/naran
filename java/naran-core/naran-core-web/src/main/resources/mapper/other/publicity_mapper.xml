@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.other.Publicity">
+	<resultMap id="PublicityMap" type="Publicity">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expired" column="EXPIRED" jdbcType="BIT" />
+
+
+		<result column="PUBLICITY_TYPE" property="publicityType" jdbcType="VARCHAR" />
+		<result column="PUBLICITY_NAME" property="publicityName" jdbcType="VARCHAR" />
+		<result column="PUBLICITY_IMG" property="publicityImg" jdbcType="VARCHAR" />
+		<result column="PUBLICITY_CATEGORY" property="publicityCategory" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addPublicity" parameterType="Publicity" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_publicity ( PUBLICITY_TYPE, PUBLICITY_NAME,
+		PUBLICITY_IMG, CREATE_TIME, UPDATE_TIME,
+		EXPIRED, PUBLICITY_CATEGORY)
+		values (#{publicityType,jdbcType=VARCHAR}, #{publicityName,jdbcType=VARCHAR},
+		#{publicityImg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{publicityCategory,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updatePublicity" parameterType="Publicity">
+		update naran_publicity
+		<set>
+			<if test="publicityType != null">
+				PUBLICITY_TYPE = #{publicityType,jdbcType=VARCHAR},
+			</if>
+			<if test="publicityName != null">
+				PUBLICITY_NAME = #{publicityName,jdbcType=VARCHAR},
+			</if>
+			<if test="publicityImg != null">
+				PUBLICITY_IMG = #{publicityImg,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="publicityCategory != null">
+				PUBLICITY_CATEGORY = #{publicityCategory,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findPublicityById" parameterType="Long" resultMap="PublicityMap">
+		SELECT * FROM naran_publicity WHERE ID = #{id}
+	</select>
+
+	<select id="findPublicityByPage" parameterType="HashMap" resultMap="PublicityMap">
+		SELECT * FROM naran_publicity WHERE EXPIRED=1 AND PUBLICITY_TYPE = #{publicityType} ORDER BY ID DESC
+	</select>
+
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.account.AccountRecord">
+	<resultMap id="AccountRecordMap" type="AccountRecord">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+
+		<result property="accountId" column="ACCOUNT_ID" jdbcType="BIGINT" />
+		<result property="deviceNo" column="DEVICE_NO" jdbcType="VARCHAR" />
+		<result property="accessToken" column="ACCESS_TOKEN" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addAccountRecord" parameterType="AccountRecord" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO naran_account_record (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED,
+		ACCOUNT_ID,
+		DEVICE_NO,
+		ACCESS_TOKEN
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT},
+		#{accountId,jdbcType=BIGINT},
+		#{deviceNo,jdbcType=VARCHAR},
+		#{accessToken,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateAccountRecord" parameterType="AccountRecord">
+		UPDATE naran_account_record
+		<set>
+			<if test="deviceNo != null">
+				DEVICE_NO = #{deviceNo},
+			</if>
+			<if test="accessToken != null">
+				ACCESS_TOKEN = #{accessToken},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findAccountRecordByAccountId" parameterType="String" resultMap="AccountRecordMap">
+		SELECT * FROM naran_account_record WHERE EXPIRED=1 AND ACCOUNT_ID = #{accountId}
+	</select>
+
+	<select id="findAccountRecordByAccessToken" parameterType="String" resultMap="AccountRecordMap">
+		SELECT * FROM naran_account_record WHERE EXPIRED=1 AND ACCESS_TOKEN = #{accessToken}
+	</select>
+
+</mapper>

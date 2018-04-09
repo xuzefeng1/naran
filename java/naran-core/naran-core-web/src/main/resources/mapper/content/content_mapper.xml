@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.content.Content">
+	<resultMap id="ContentMap" type="Content">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="CONTENT_TITLE" property="contentTitle" jdbcType="VARCHAR" />
+		<result column="CONTENT_BODY" property="contentBody" jdbcType="VARCHAR" />
+		<result column="CONTENT_IMG" property="contentImg" jdbcType="VARCHAR" />
+		<result column="SHARE_TIMES" property="shareTimes" jdbcType="INTEGER" />
+		<result column="COLLECTION_TIMES" property="collectionTimes" jdbcType="INTEGER" />
+		<result column="COMMENT_TIMES" property="commentTimes" jdbcType="INTEGER" />
+		<result column="CONTENT_TYPE" property="contentType" jdbcType="VARCHAR" />
+		<result column="RECOMMEND_TIME" property="recommendTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addContent" parameterType="Content" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_content (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, CONTENT_TITLE, CONTENT_BODY,
+		CONTENT_IMG, SHARE_TIMES, COLLECTION_TIMES,
+		COMMENT_TIMES, CONTENT_TYPE, RECOMMEND_TIME)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{contentTitle,jdbcType=VARCHAR}, #{contentBody,jdbcType=VARCHAR},
+		#{contentImg,jdbcType=VARCHAR}, #{shareTimes,jdbcType=INTEGER}, #{collectionTimes,jdbcType=INTEGER},
+		#{commentTimes,jdbcType=INTEGER}, #{contentType,jdbcType=VARCHAR}, #{recommendTime,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateContent" parameterType="Content">
+		update naran_content
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="contentTitle != null">
+				CONTENT_TITLE = #{contentTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="contentBody != null">
+				CONTENT_BODY = #{contentBody,jdbcType=VARCHAR},
+			</if>
+			<if test="contentImg != null">
+				CONTENT_IMG = #{contentImg,jdbcType=VARCHAR},
+			</if>
+			<if test="shareTimes != null">
+				SHARE_TIMES = #{shareTimes,jdbcType=INTEGER},
+			</if>
+			<if test="collectionTimes != null">
+				COLLECTION_TIMES = #{collectionTimes,jdbcType=INTEGER},
+			</if>
+			<if test="commentTimes != null">
+				COMMENT_TIMES = #{commentTimes,jdbcType=INTEGER},
+			</if>
+			<if test="contentType != null">
+				CONTENT_TYPE = #{contentType,jdbcType=VARCHAR},
+			</if>
+			<if test="recommendTime != null">
+				RECOMMEND_TIME = #{recommendTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findContentById" parameterType="Long" resultMap="ContentMap">
+		SELECT * FROM naran_content WHERE ID = #{id}
+	</select>
+
+	<select id="findContentByPage" parameterType="HashMap" resultMap="ContentMap">
+		SELECT * FROM naran_content WHERE EXPIRED=1
+		<if test="contentType != null">
+			AND CONTENT_TYPE = #{contentType}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+
+</mapper>

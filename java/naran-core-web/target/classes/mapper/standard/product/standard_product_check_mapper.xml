@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.standard.product.StandardProductCheck">
+	<resultMap id="standardProductCheckMap" type="StandardProductCheck">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="initial" column="INITIAL" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE" jdbcType="VARCHAR"/>
+		<result property="price" column="PRICE" jdbcType="DECIMAL"/>
+		<result property="unit" column="UNIT" jdbcType="VARCHAR"/>
+		<result property="showPics" column="SHOW_PICS" jdbcType="VARCHAR"/>
+		<result property="parentClassificationId" column="PARENT_CLASSIFICATION_ID" jdbcType="BIGINT"/>
+		<result property="parentClassificationName" column="PARENT_CLASSIFICATION_NAME" jdbcType="VARCHAR"/>
+		<result property="childClassificationId" column="CHILD_CLASSIFICATION_ID" jdbcType="BIGINT"/>
+		<result property="childClassificationName" column="CHILD_CLASSIFICATION_NAME" jdbcType="VARCHAR"/>
+		<result property="cispec" column="CISPEC" jdbcType="VARCHAR"/>
+		<result property="brand" column="BRAND" jdbcType="VARCHAR"/>
+		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addStandardProductCheck" parameterType="StandardProductCheck" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO STANDARD_PRODUCT_CHECK (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			NAME,
+			INITIAL,
+			CODE,
+			PRICE,
+			UNIT,
+			DESCRIPTION,
+			SHOW_PICS,
+			PARENT_CLASSIFICATION_ID,
+			PARENT_CLASSIFICATION_NAME,
+			CHILD_CLASSIFICATION_ID,
+			CHILD_CLASSIFICATION_NAME,
+			BRAND,	
+			CISPEC,	
+			REMARK
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{name,jdbcType=VARCHAR},
+			#{initial,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{price,jdbcType=DECIMAL},
+			#{unit,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{showPics,jdbcType=VARCHAR},
+			#{parentClassificationId,jdbcType=BIGINT},
+			#{parentClassificationName,jdbcType=VARCHAR},
+			#{childClassificationId,jdbcType=BIGINT},
+			#{childClassificationName,jdbcType=VARCHAR},
+			#{brand,jdbcType=VARCHAR},
+			#{cispec,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateStandardProductCheck" parameterType="StandardProductCheck">
+		UPDATE STANDARD_PRODUCT_CHECK
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="initial != null">
+				INITIAL = #{initial},
+			</if>
+			<if test="code != null">
+				CODE = #{code},
+			</if>
+			<if test="price != null">
+				PRICE = #{price},
+			</if>
+			<if test="unit != null">
+				UNIT = #{unit},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description},
+			</if>
+			<if test="showPics != null">
+				SHOW_PICS = #{showPics},
+			</if>
+			<if test="parentClassificationId != null">
+				PARENT_CLASSIFICATION_ID = #{parentClassificationId},
+			</if>
+			<if test="parentClassificationName != null">
+				PARENT_CLASSIFICATION_NAME = #{parentClassificationName},
+			</if>
+			<if test="childClassificationId != null">
+				CHILD_CLASSIFICATION_ID = #{childClassificationId},
+			</if>
+			<if test="childClassificationName != null">
+				CHILD_CLASSIFICATION_NAME = #{childClassificationName},
+			</if>	
+			<if test="cispec != null">
+				CISPEC = #{cispec},
+			</if>
+			<if test="brand != null">
+				BRAND = #{brand},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="findStandardProductCheckById" parameterType="Long" resultMap="standardProductCheckMap">
+		SELECT * FROM STANDARD_PRODUCT_CHECK WHERE ID = #{id}
+	</select>
+	
+	<select id="deleteStandardProductCheckById" parameterType="Long" >
+		DELETE FROM STANDARD_PRODUCT_CHECK WHERE ID = #{id}
+	</select>
+
+	<select id="findStandardProductCheckByCode" parameterType="String" resultMap="standardProductCheckMap">
+		SELECT * FROM STANDARD_PRODUCT_CHECK WHERE EXPIRED_TIME IS NULL 
+		<if test="code != null">
+			AND CODE = #{code}
+		</if>
+	</select>
+	
+	<select id="pageStandardProductCheckByFilter" parameterType="HashMap" resultMap="standardProductCheckMap">
+		SELECT * FROM STANDARD_PRODUCT_CHECK WHERE EXPIRED_TIME IS NULL
+		<if test="name != null">
+			AND (NAME LIKE #{name} OR INITIAL LIKE #{name})
+		</if>
+		<if test="parentClassificationId != null">
+			AND PARENT_CLASSIFICATION_ID = #{parentClassificationId}
+		</if>
+		<if test="childClassificationId != null">
+			AND CHILD_CLASSIFICATION_ID = #{childClassificationId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

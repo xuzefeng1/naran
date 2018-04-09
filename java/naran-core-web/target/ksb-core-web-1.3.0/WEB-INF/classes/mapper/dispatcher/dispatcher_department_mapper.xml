@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.dispatcher.DispatcherDepartment">
+	<resultMap id="DispatcherDepartmentMap" type="DispatcherDepartment">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT"/>
+		<result property="parentId" column="PARENT_ID" jdbcType="BIGINT"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addDispatcherDepartment" parameterType="DispatcherDepartment" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DISPATCHER_DEPARTMENT (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			DISPATCHER_ID,
+			PARENT_ID,
+			NAME
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{dispatcherId,jdbcType=BIGINT},
+			#{parentId,jdbcType=BIGINT},
+			#{name,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateDispatcherDepartment" parameterType="DispatcherDepartment">
+		UPDATE DISPATCHER_DEPARTMENT
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="findDispatcherDepartmentById" parameterType="Long" resultMap="DispatcherDepartmentMap">
+		SELECT * FROM DISPATCHER_DEPARTMENT WHERE ID = #{id}
+	</select>
+
+	<select id="findDispatcherDepartmentByName" parameterType="String" resultMap="DispatcherDepartmentMap">
+		SELECT * FROM DISPATCHER_DEPARTMENT WHERE EXPIRED_TIME IS NULL AND NAME = #{name}
+	</select>
+
+	<select id="findDispatcherDepartmentByDispatcher" parameterType="Long" resultMap="DispatcherDepartmentMap">
+		SELECT * FROM DISPATCHER_DEPARTMENT WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+	</select>
+			
+</mapper>

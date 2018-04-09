@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.relation.RelationRoleModule">
+	<resultMap id="relationRoleModuleMap" type="RelationRoleModule">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="roleId" column="ROLE_ID" jdbcType="BIGINT" />
+		<result property="moduleId" column="MODULE_ID" jdbcType="BIGINT" />
+
+	</resultMap>
+
+	<insert id="addRelationRoleModule" parameterType="RelationRoleModule" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_ROLE_MODULE (
+		CREATE_TIME,
+		UPDATE_TIME,
+		ROLE_ID,
+		MODULE_ID
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{roleId,jdbcType=BIGINT},
+		#{moduleId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateRelationRoleModule" parameterType="RelationRoleModule">
+		UPDATE RELATION_ROLE_MODULE
+		<set>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	<update id="deleteRelationRoleModule" parameterType="HashMap">
+		DELETE FROM RELATION_ROLE_MODULE WHERE ROLE_ID = #{roleId} AND MODULE_ID = #{moduleId}
+	</update>
+	<update id="deleteRelationRoleModuleByRole" parameterType="HashMap">
+		DELETE FROM RELATION_ROLE_MODULE WHERE ROLE_ID = #{roleId}
+	</update>
+	<select id="findRelationRoleModuleById" parameterType="Long" resultMap="relationRoleModuleMap">
+		SELECT * FROM RELATION_ROLE_MODULE WHERE ID = #{id}
+	</select>
+
+	<select id="findRelationRoleModule" parameterType="HashMap" resultMap="relationRoleModuleMap">
+		SELECT * FROM RELATION_ROLE_MODULE WHERE ROLE_ID = #{roleId} AND MODULE_ID = #{moduleId}
+	</select>
+
+	<select id="findRelationRoleModuleByRole" parameterType="HashMap" resultMap="relationRoleModuleMap">
+		SELECT * FROM RELATION_ROLE_MODULE WHERE ROLE_ID = #{roleId}
+	</select>
+
+	<select id="findRelationRoleModuleByDispatcher" parameterType="HashMap" resultMap="relationRoleModuleMap">
+		SELECT R.* FROM RELATION_ROLE_MODULE R
+		<if test="keyword != null">
+			LEFT JOIN ROLE A ON A.ID=R.ROLE_ID
+		</if>
+		WHERE R.MODULE_ID = #{moduleId}
+		<if test="keyword != null">
+			AND A.NAME LIKE #{keyword}
+		</if>
+	</select>
+
+</mapper>

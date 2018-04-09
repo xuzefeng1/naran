@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.account.Account">
+	<resultMap id="AccountMap" type="Account">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="USERNAME" jdbcType="VARCHAR" property="username" />
+		<result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+		<result column="NICK_NAME" jdbcType="VARCHAR" property="nickName" />
+		<result column="PHONE" jdbcType="VARCHAR" property="phone" />
+		<result column="PHOTO" jdbcType="VARCHAR" property="photo" />
+		<result column="CITY" jdbcType="VARCHAR" property="city" />
+		<result column="LOCATION" jdbcType="VARCHAR" property="location" />
+		<result column="SEX" jdbcType="VARCHAR" property="sex" />
+		<result column="BIRTHDAY" jdbcType="VARCHAR" property="birthday" />
+		<result column="IDENTITY_CARD" jdbcType="VARCHAR" property="identityCard" />
+		<result column="NOW_EXPERIENCE" jdbcType="BIGINT" property="nowExperience" />
+		<result column="NOW_LOVE" jdbcType="BIGINT" property="nowLove" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="CARD_TIME" jdbcType="TIMESTAMP" property="cardTime" />
+		<result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+		<result column="COUNTY" jdbcType="VARCHAR" property="county" />
+		<result column="CARD_POSITIVE" jdbcType="VARCHAR" property="cardPositive" />
+		<result column="CARD_OPPOSITE" jdbcType="VARCHAR" property="cardOpposite" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="CERTIFICATION_TYPE" jdbcType="VARCHAR" property="certificationType" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		
+	</resultMap>
+
+	<insert id="addAccount" parameterType="Account" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_account (USERNAME, PASSWORD,
+		NICK_NAME, PHONE, PHOTO,
+		CITY, LOCATION, SEX,
+		BIRTHDAY, IDENTITY_CARD, NOW_EXPERIENCE,
+		NOW_LOVE, CREATE_TIME, UPDATE_TIME,
+		EXPIRED, CARD_TIME, PROVINCE,
+		COUNTY, CARD_POSITIVE, CARD_OPPOSITE,
+		NAME, CERTIFICATION_TYPE,REMARK)
+		values ( #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+		#{nickName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+		#{birthday,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, #{nowExperience,jdbcType=BIGINT},
+		#{nowLove,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT},
+		#{cardTime,jdbcType=TIMESTAMP}, #{province,jdbcType=VARCHAR},
+		#{county,jdbcType=VARCHAR}, #{cardPositive,jdbcType=VARCHAR}, #{cardOpposite,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{certificationType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateAccount" parameterType="Account">
+		update naran_account
+		<set>
+			<if test="username != null">
+				USERNAME = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="nickName != null">
+				NICK_NAME = #{nickName,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				PHONE = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="photo != null">
+				PHOTO = #{photo,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				CITY = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				LOCATION = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				BIRTHDAY = #{birthday,jdbcType=VARCHAR},
+			</if>
+			<if test="identityCard != null">
+				IDENTITY_CARD = #{identityCard,jdbcType=VARCHAR},
+			</if>
+			<if test="nowExperience != null">
+				NOW_EXPERIENCE = #{nowExperience,jdbcType=BIGINT},
+			</if>
+			<if test="nowLove != null">
+				NOW_LOVE = #{nowLove,jdbcType=BIGINT},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="cardTime != null">
+				CARD_TIME = #{cardTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="province != null">
+				PROVINCE = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="county != null">
+				COUNTY = #{county,jdbcType=VARCHAR},
+			</if>
+			<if test="cardPositive != null">
+				CARD_POSITIVE = #{cardPositive,jdbcType=VARCHAR},
+			</if>
+			<if test="cardOpposite != null">
+				CARD_OPPOSITE = #{cardOpposite,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="certificationType != null">
+				CERTIFICATION_TYPE = #{certificationType,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="updateAccountPassword" parameterType="HashMap">
+		UPDATE naran_account SET PASSWORD = #{password}, UPDATE_TIME = NOW()
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findAccountById" parameterType="Long" resultMap="AccountMap">
+		SELECT * FROM naran_account WHERE ID = #{id}
+	</select>
+
+	<select id="findAccountByPhone" parameterType="String" resultMap="AccountMap">
+		SELECT * FROM naran_account WHERE EXPIRED=1 AND PHONE = #{phone}
+	</select>
+
+	<select id="findAccountByLogin" parameterType="HashMap" resultMap="AccountMap">
+		SELECT * FROM naran_account WHERE EXPIRED=1 AND PHONE = #{phone} AND PASSWORD = #{password}
+	</select>
+
+</mapper>

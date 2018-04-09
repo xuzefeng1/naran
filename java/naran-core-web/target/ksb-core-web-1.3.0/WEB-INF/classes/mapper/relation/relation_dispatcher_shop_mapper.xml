@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.match.RelationDispatcherShop">
+	<resultMap id="relationDispatcherShopMap" type="RelationDispatcherShop">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="shopId" column="SHOP_ID" jdbcType="BIGINT" />
+		<result property="dispatchTime" column="DISPATCH_TIME" jdbcType="VARCHAR" />
+		<result property="shopName" column="SHOP_NAME" jdbcType="VARCHAR" />
+		<result property="shopMobile" column="SHOP_MOBILE" jdbcType="VARCHAR" />
+		<result property="dispatcherName" column="DISPATCHER_NAME" jdbcType="VARCHAR" />
+		<result property="dispatcherMobile" column="DISPATCHER_MOBILE" jdbcType="VARCHAR" />
+		<result property="applyStatus" column="APPLY_STATUS" jdbcType="BIGINT" />
+		<result property="dispatcherAddress" column="DISPATCHER_ADDRESS" jdbcType="VARCHAR" />
+		<result property="shopAddress" column="SHOP_ADDRESS" jdbcType="VARCHAR" />
+		<result property="shopCharger" column="SHOP_CHARGER" jdbcType="VARCHAR" />
+
+		<result property="pressStatus" column="PRESS_STATUS" jdbcType="BIGINT" />
+		<result property="pressDay" column="PRESS_DAY" jdbcType="BIGINT" />
+		<result property="pressToShop" column="PRESS_TO_SHOP" jdbcType="BIGINT" />
+		<result property="pressToDispatcher" column="PRESS_TO_DISPATCHER" jdbcType="BIGINT" />
+
+		<result property="shopLevel" column="SHOP_LEVEL" jdbcType="BIGINT" />
+		<result property="showPrice" column="SHOW_PRICE" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addRelationDispatcherShop" parameterType="RelationDispatcherShop" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_DISPATCHER_SHOP (
+		CREATE_TIME,
+		UPDATE_TIME,
+		DISPATCHER_ID,
+		SHOP_ID,
+		DISPATCH_TIME,
+		SHOP_NAME,
+		SHOP_MOBILE,
+		DISPATCHER_NAME,
+		DISPATCHER_MOBILE,
+		DISPATCHER_ADDRESS,
+		SHOP_ADDRESS,
+		APPLY_STATUS,
+		PRESS_STATUS,
+		PRESS_DAY,
+		PRESS_TO_SHOP,
+		PRESS_TO_DISPATCHER,
+		SHOP_LEVEL,
+		SHOP_CHARGER,
+		SHOW_PRICE
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{shopId,jdbcType=BIGINT},
+		#{dispatchTime,jdbcType=VARCHAR},
+		#{shopName,jdbcType=VARCHAR},
+		#{shopMobile,jdbcType=VARCHAR},
+		#{dispatcherName,jdbcType=VARCHAR},
+		#{dispatcherMobile,jdbcType=VARCHAR},
+		#{dispatcherAddress,jdbcType=VARCHAR},
+		#{shopAddress,jdbcType=VARCHAR},
+		#{applyStatus,jdbcType=BIGINT},
+		#{pressStatus,jdbcType=BIGINT},
+		#{pressDay,jdbcType=BIGINT},
+		#{pressToShop,jdbcType=BIGINT},
+		#{pressToDispatcher,jdbcType=BIGINT},
+		#{shopLevel,jdbcType=BIGINT},
+		#{shopCharger,jdbcType=VARCHAR},
+		#{showPrice,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateRelationDispatcherShop" parameterType="RelationDispatcherShop">
+		UPDATE RELATION_DISPATCHER_SHOP
+		<set>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="dispatchTime != null">
+				DISPATCH_TIME = #{dispatchTime},
+			</if>
+			<if test="shopName != null">
+				SHOP_NAME = #{shopName},
+			</if>
+			<if test="shopMobile != null">
+				SHOP_MOBILE = #{shopMobile},
+			</if>
+			<if test="shopCharger != null">
+				SHOP_CHARGER = #{shopCharger},
+			</if>
+			<if test="dispatcherName != null">
+				DISPATCHER_NAME = #{dispatcherName},
+			</if>
+			<if test="dispatcherMobile != null">
+				DISPATCHER_MOBILE = #{dispatcherMobile},
+			</if>
+			<if test="dispatcherAddress != null">
+				DISPATCHER_ADDRESS = #{dispatcherAddress},
+			</if>
+			<if test="shopAddress != null">
+				SHOP_ADDRESS = #{shopAddress},
+			</if>
+			<if test="applyStatus != null">
+				APPLY_STATUS = #{applyStatus},
+			</if>
+			<if test="pressStatus != null">
+				PRESS_STATUS = #{pressStatus},
+			</if>
+			<if test="pressDay != null">
+				PRESS_DAY = #{pressDay},
+			</if>
+			<if test="pressToShop != null">
+				PRESS_TO_SHOP = #{pressToShop},
+			</if>
+			<if test="pressToDispatcher != null">
+				PRESS_TO_DISPATCHER = #{pressToDispatcher},
+			</if>
+			<if test="shopLevel != null">
+				SHOP_LEVEL = #{shopLevel},
+			</if>
+			<if test="showPrice != null">
+				SHOW_PRICE = #{showPrice}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="deleteRelationDispatcherShopByDispatcher" parameterType="RelationDispatcherShop">
+		DELETE FROM RELATION_DISPATCHER_SHOP WHERE DISPATCHER_ID = #{dispatcherId} and SHOP_ID = #{shopId}
+	</update>
+
+	<select id="findRelationDispatcherShopById" parameterType="Long" resultMap="relationDispatcherShopMap">
+		SELECT * FROM RELATION_DISPATCHER_SHOP WHERE ID = #{id}
+	</select>
+
+	<select id="findRelationDispatcherShopByDispatcherShop" parameterType="HashMap" resultMap="relationDispatcherShopMap">
+		SELECT * FROM RELATION_DISPATCHER_SHOP WHERE DISPATCHER_ID = #{dispatcherId} and SHOP_ID = #{shopId} limit 1
+	</select>
+
+	<select id="pageRelationDispatcherShopByFilter" parameterType="HashMap" resultMap="relationDispatcherShopMap">
+		SELECT * FROM RELATION_DISPATCHER_SHOP WHERE 1 = 1
+		<if test="dispatcherId != null">
+			AND DISPATCHER_ID = #{dispatcherId}
+		</if>
+		<if test="shopId != null">
+			AND SHOP_ID = #{shopId}
+		</if>
+		<if test="name != null">
+			AND (DISPATCHER_NAME LIKE #{name} OR DISPATCHER_MOBILE LIKE #{name} OR SHOP_NAME LIKE #{name} OR SHOP_MOBILE LIKE #{name})
+		</if>
+
+		ORDER BY ID DESC
+	</select>
+
+	<select id="findRelationDispatcherShopByDispatcher" parameterType="HashMap" resultMap="relationDispatcherShopMap">
+		SELECT * FROM RELATION_DISPATCHER_SHOP WHERE DISPATCHER_ID = #{dispatcherId} AND APPLY_STATUS =1
+	</select>
+
+	<select id="findRelationDispatcherShopByShop" parameterType="HashMap" resultMap="relationDispatcherShopMap">
+		SELECT * FROM RELATION_DISPATCHER_SHOP WHERE SHOP_ID = #{shopId} AND APPLY_STATUS =1
+	</select>
+
+	<select id="findRelationDispatcherShopByLevel" parameterType="HashMap" resultMap="relationDispatcherShopMap">
+		SELECT * FROM RELATION_DISPATCHER_SHOP WHERE DISPATCHER_ID = #{dispatcherId} AND SHOP_LEVEL = #{levelId}
+	</select>
+
+
+</mapper>

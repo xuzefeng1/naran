@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.questionnaire.QuestionnaireRecord">
+	<resultMap id="QuestionnaireRecordMap" type="QuestionnaireRecord">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="OPTION_CONTENT" jdbcType="VARCHAR" property="optionContent" />
+		<result column="ORDER_ID" jdbcType="BIGINT" property="orderId" />
+		<result column="QUESTIONNAIRE_ID" jdbcType="BIGINT" property="questionnaireId" />
+		<result column="ACCOUNT_ID" jdbcType="BIGINT" property="accountId" />
+		<result column="OPTION_ID" jdbcType="BIGINT" property="optionId" />
+	</resultMap>
+
+	<insert id="addQuestionnaireRecord" parameterType="QuestionnaireRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_questionnaire_record ( CREATE_TIME, UPDATE_TIME,
+		EXPIRED, OPTION_CONTENT, ORDER_ID,
+		QUESTIONNAIRE_ID, ACCOUNT_ID, OPTION_ID)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{optionContent,jdbcType=VARCHAR}, #{orderId,jdbcType=BIGINT},
+		#{questionnaireId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, #{optionId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateQuestionnaireRecord" parameterType="QuestionnaireRecord">
+		update naran_questionnaire_record
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="optionContent != null">
+				OPTION_CONTENT = #{optionContent,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				ORDER_ID = #{orderId,jdbcType=BIGINT},
+			</if>
+			<if test="questionnaireId != null">
+				QUESTIONNAIRE_ID = #{questionnaireId,jdbcType=BIGINT},
+			</if>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="optionId != null">
+				OPTION_ID = #{optionId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findQuestionnaireRecordById" parameterType="Long" resultMap="QuestionnaireRecordMap">
+		SELECT * FROM naran_questionnaire_record WHERE ID = #{id}
+	</select>
+
+	<select id="findQuestionnaireRecordByPage" parameterType="HashMap" resultMap="QuestionnaireRecordMap">
+		SELECT * FROM naran_questionnaire_record WHERE EXPIRED=1 ORDER BY ID DESC
+	</select>
+
+
+</mapper>

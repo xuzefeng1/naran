@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+    http://code.alibabatech.com/schema/dubbo
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    ">
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="ksb-core" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${zookeeper.host}" timeout="10000" register="true" client="zkclient" />
+	<dubbo:protocol name="rmi" port="20880" accesslog="true" />
+	<dubbo:provider timeout="10000" retries="0" />
+
+
+
+	<!-- 平台账号 -->
+	<dubbo:service ref="accountService" interface="com.ksb.dubbo.service.account.IAccountService" />
+
+	<!-- 联系人 -->
+	<dubbo:service ref="contactService" interface="com.ksb.dubbo.service.contact.IContactService" />
+	<dubbo:service ref="coworkerService" interface="com.ksb.dubbo.service.contact.ICoworkerService" />
+	<!-- 配送商 -->
+	<dubbo:service ref="dispatcherService" interface="com.ksb.dubbo.service.dispatcher.IDispatcherService" />
+	<dubbo:service ref="employeeService" interface="com.ksb.dubbo.service.dispatcher.IEmployeeService" />
+	<dubbo:service ref="dispatcherDepartmentService" interface="com.ksb.dubbo.service.dispatcher.IDispatcherDepartmentService" />
+	<dubbo:service ref="dispatcherPrivilegeService" interface="com.ksb.dubbo.service.dispatcher.IDispatcherPrivilegeService" />
+	<dubbo:service ref="dispatcherProductGroupService" interface="com.ksb.dubbo.service.dispatcher.IDispatcherProductGroupService" />
+	<dubbo:service ref="dispatcherProductService" interface="com.ksb.dubbo.service.dispatcher.IDispatcherProductService" />
+	<dubbo:service ref="shopService" interface="com.ksb.dubbo.service.shop.IShopService" />
+
+	<!-- 库存 -->
+	<dubbo:service ref="depotPurchaseService" interface="com.ksb.dubbo.service.depot.IDepotPurchaseService" />
+	<dubbo:service ref="depotSaleService" interface="com.ksb.dubbo.service.depot.IDepotSaleService" />
+	<dubbo:service ref="depotCheckService" interface="com.ksb.dubbo.service.depot.IDepotCheckService" />
+
+	<dubbo:service ref="dispatcherShopLevelService" interface="com.ksb.dubbo.service.shop.IDispatcherShopLevelService" />
+	<dubbo:service ref="relationProductShopLevelService" interface="com.ksb.dubbo.service.shop.IRelationProductShopLevelService" />
+
+	<!-- 配送 -->
+	<dubbo:service ref="deliverPaperService" interface="com.ksb.dubbo.service.deliver.IDeliverPaperService" />
+	<dubbo:service ref="deliverRouteService" interface="com.ksb.dubbo.service.deliver.IDeliverRouteService" />
+
+	<!-- 订单 -->
+	<dubbo:service ref="tradeOrderDetailService" interface="com.ksb.dubbo.service.order.ITradeOrderDetailService" />
+	<dubbo:service ref="tradeOrderReportService" interface="com.ksb.dubbo.service.order.ITradeOrderReportService" />
+	<dubbo:service ref="tradeOrderService" interface="com.ksb.dubbo.service.order.ITradeOrderService" />
+	<dubbo:service ref="tradeOrderStatisticService" interface="com.ksb.dubbo.service.order.ITradeOrderStatisticService" />
+	<dubbo:service ref="tradeOrderTestsService" interface="com.ksb.dubbo.service.order.ITradeOrderTestsService" />
+
+	<dubbo:service ref="tradeOrderQuoteService" interface="com.ksb.dubbo.service.order.ITradeOrderQuoteService" />
+	<dubbo:service ref="tradeOrderQuoteDetailService" interface="com.ksb.dubbo.service.order.ITradeOrderQuoteDetailService" />
+
+
+	<!-- 采购 -->
+	<dubbo:service ref="placeOrderService" interface="com.ksb.dubbo.service.place.IPlaceOrderService" />
+	<dubbo:service ref="placeOrderDetailService" interface="com.ksb.dubbo.service.place.IPlaceOrderDetailService" />
+
+
+	<!-- 标准商品库 -->
+	<dubbo:service ref="standardProductCheckService" interface="com.ksb.dubbo.service.standard.product.IStandardProductCheckService" />
+	<dubbo:service ref="standardProductClassificationService" interface="com.ksb.dubbo.service.standard.product.IStandardProductClassificationService" />
+	<dubbo:service ref="standardProductService" interface="com.ksb.dubbo.service.standard.product.IStandardProductService" />
+
+	<!-- 工具类 -->
+	<dubbo:service ref="smsMessageService" interface="com.ksb.dubbo.service.message.ISmsMessageService" />
+	<dubbo:service ref="dispatcherNewsService" interface="com.ksb.dubbo.service.message.IDispatcherNewsService" />
+	<dubbo:service ref="dispatcherSystemMessageService" interface="com.ksb.dubbo.service.message.IDispatcherSystemMessageService" />
+	<dubbo:service ref="regionService" interface="com.ksb.dubbo.service.region.IRegionService" />
+
+	<!-- 抽象业务模块 -->
+	<dubbo:service ref="moduleService" interface="com.ksb.dubbo.service.module.IModuleService" />
+	<dubbo:service ref="dispatcherRoleService" interface="com.ksb.dubbo.service.module.IDispatcherRoleService" />
+
+	<!-- 融云IM讨论组模块 -->
+	<dubbo:service ref="rongTopicGroupService" interface="com.ksb.dubbo.service.rong.IRongTopicGroupService" />
+
+	<dubbo:service ref="thirdFinanceService" interface="com.ksb.dubbo.service.third.IThirdFinanceService" />
+
+	<dubbo:service ref="commonSearchService" interface="com.ksb.dubbo.service.app.ICommonSearchService" />
+	<dubbo:service ref="appVersionService" interface="com.ksb.dubbo.service.app.IAppVersionService" />
+
+
+	<dubbo:service ref="webPrivilegeService" interface="com.ksb.dubbo.service.role.IWebPrivilegeService" />
+	<dubbo:service ref="webRoleService" interface="com.ksb.dubbo.service.role.IWebRoleService" />
+
+	<dubbo:service ref="dispatcherExpenseService" interface="com.ksb.dubbo.service.finance.IDispatcherExpenseService" />
+	<dubbo:service ref="orderPayService" interface="com.ksb.dubbo.service.finance.IOrderPayService" />
+
+	<!-- 供应商 -->
+	<dubbo:service ref="supplierService" interface="com.ksb.dubbo.service.supplier.ISupplierService" />
+
+
+</beans>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.app.AppVersion">
+
+	<resultMap id="AppVersionMap" type="AppVersion">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED_TIME" property="expiredTime" jdbcType="TIMESTAMP" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="MD5" property="md5" jdbcType="VARCHAR" />
+		<result column="MSG" property="msg" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="FILE_SIZE" property="fileSize" jdbcType="BIGINT" />
+		<result column="FORCE_UPDATE" property="forceUpdate" jdbcType="BIGINT" />
+		<result column="CLIENT_VERSION" property="clientVersion" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addAppVersion" parameterType="AppVersion" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO APP_VERSION (
+		URL,
+		MD5,
+		MSG,
+		NAME,
+		FILE_SIZE,
+		FORCE_UPDATE,
+		CLIENT_VERSION,
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME
+		) VALUES (
+		#{url,jdbcType=VARCHAR},
+		#{md5,jdbcType=VARCHAR},
+		#{msg,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{fileSize,jdbcType=BIGINT},
+		#{forceUpdate,jdbcType=BIGINT},
+		#{clientVersion,jdbcType=BIGINT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updateAppVersion" parameterType="AppVersion">
+		UPDATE APP_VERSION
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME=#{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME=#{expiredTime}
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+	<select id="findAppVersionByLast" parameterType="HashMap" resultMap="AppVersionMap">
+		SELECT * FROM APP_VERSION WHERE EXPIRED_TIME IS NULL
+		ORDER BY CLIENT_VERSION DESC LIMIT 1
+	</select>
+
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.activity_apply.ActivityApply">
+	<resultMap id="ActivityApplyMap" type="ActivityApply">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="ACCOUNT_ID" jdbcType="BIGINT" property="accountId" />
+		<result column="ACCOUNT_NAME" jdbcType="VARCHAR" property="accountName" />
+		<result column="ACCOUNT_PHONE" jdbcType="VARCHAR" property="accountPhone" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="ACTIVITY_ID" jdbcType="BIGINT" property="activityId" />
+		<result column="APPLY_STATUS" jdbcType="VARCHAR" property="applyStatus" />
+	</resultMap>
+
+	<insert id="addActivityApply" parameterType="ActivityApply" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_activity_apply (ACCOUNT_ID, ACCOUNT_NAME,
+		ACCOUNT_PHONE, CREATE_TIME, UPDATE_TIME,
+		EXPIRED, ACTIVITY_ID, APPLY_STATUS
+		)
+		values (#{accountId,jdbcType=BIGINT}, #{accountName,jdbcType=VARCHAR},
+		#{accountPhone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{activityId,jdbcType=BIGINT}, #{applyStatus,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateActivityApply" parameterType="ActivityApply">
+		update naran_activity_apply
+		<set>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="accountName != null">
+				ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+			</if>
+			<if test="accountPhone != null">
+				ACCOUNT_PHONE = #{accountPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="activityId != null">
+				ACTIVITY_ID = #{activityId,jdbcType=BIGINT},
+			</if>
+			<if test="applyStatus != null">
+				APPLY_STATUS = #{applyStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+
+	<select id="findActivityApplyById" parameterType="Long" resultMap="ActivityApplyMap">
+		SELECT * FROM naran_activity_apply WHERE ID = #{id}
+	</select>
+
+	<select id="findActivityApplyByAccountId" parameterType="Long" resultMap="ActivityApplyMap">
+		SELECT * FROM naran_activity_apply WHERE EXPIRED=1 AND ACCOUNT_ID = #{accountId}
+		AND ACTIVITY_ID = #{activityId} LIMIT 1
+	</select>
+
+
+	<select id="findActivityApplyByPage" parameterType="HashMap" resultMap="ActivityApplyMap">
+		SELECT * FROM naran_activity_apply WHERE EXPIRED=1
+		<if test="activityId != null">
+			AND ACTIVITY_ID = #{activityId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+
+</mapper>

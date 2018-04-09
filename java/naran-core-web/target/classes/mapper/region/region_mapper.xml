@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.Region">
+	<resultMap id="provinceMap" type="Province">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP"/>
+		
+		<result property="code" column="CODE" jdbcType="INTEGER"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="townMap" type="Town">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP"/>
+		
+		<result property="provinceId" column="PROVINCE_ID" jdbcType="BIGINT"/>
+		<result property="code" column="CODE" jdbcType="INTEGER"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="opened" column="OPENED" jdbcType="BOOLEAN"/>
+	</resultMap>
+	<resultMap id="areaMap" type="Area">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP"/>
+		
+		<result property="townId" column="TOWN_ID" jdbcType="BIGINT"/>
+		<result property="code" column="CODE" jdbcType="INTEGER"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<update id="openTown" >
+		UPDATE REGION_TOWN 
+		SET OPENED = 1, UPDATE_TIME = NOW()
+		WHERE ID IN 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+	</update>
+	<update id="closeTown" >
+		UPDATE REGION_TOWN 
+		SET OPENED = 0, UPDATE_TIME = NOW()
+		WHERE ID IN 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+	</update>
+		
+	<select id="findProvinceById" parameterType="Long" resultMap="provinceMap">
+		SELECT * FROM REGION_PROVINCE WHERE ID = #{id}
+	</select>
+	<select id="findTownById" parameterType="Long" resultMap="townMap">
+		SELECT * FROM REGION_TOWN WHERE ID = #{id}
+	</select>
+	<select id="findTownByName" parameterType="String" resultMap="townMap">
+		SELECT * FROM REGION_TOWN WHERE name = #{name}
+	</select>
+	<select id="findAreaById" parameterType="Long" resultMap="areaMap">
+		SELECT * FROM REGION_AREA WHERE ID = #{id}
+	</select>
+	
+	<select id="findProvinceByAll" resultMap="provinceMap">
+		SELECT * FROM REGION_PROVINCE WHERE EXPIRED_TIME IS NULL
+	</select>
+	<select id="findTownByProvince" parameterType="Long" resultMap="townMap">
+		SELECT * FROM REGION_TOWN WHERE PROVINCE_ID = #{provinceId} AND EXPIRED_TIME IS NULL
+	</select>
+	<select id="findAreaByTown" parameterType="Long" resultMap="areaMap">
+		SELECT * FROM REGION_AREA WHERE TOWN_ID  = #{townId} AND EXPIRED_TIME IS NULL
+	</select>
+		
+	<select id="findTownByOpened" resultMap="townMap">
+		SELECT * FROM REGION_TOWN WHERE OPENED = 1 AND EXPIRED_TIME IS NULL
+	</select>
+	
+	<select id="findTownByAll" resultMap="townMap">
+		SELECT * FROM REGION_TOWN WHERE EXPIRED_TIME IS NULL
+	</select>
+	
+	<select id="findAreaByAll" resultMap="areaMap">
+		SELECT * FROM REGION_AREA WHERE EXPIRED_TIME IS NULL
+	</select>
+	
+	<select id="findProvinceByOpened" resultMap="provinceMap">
+		SELECT DISTINCT p.* FROM REGION_PROVINCE p 
+		LEFT JOIN REGION_TOWN t on p.ID = t.PROVINCE_ID 
+		WHERE t.OPENED = 1 
+		AND t.EXPIRED_TIME IS NULL
+	</select>
+	
+</mapper>

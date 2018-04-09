@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.order.TradeOrderDetail">
+	<resultMap id="tradeOrderDetailMap" type="TradeOrderDetail">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="orderId" column="ORDER_ID" jdbcType="BIGINT" />
+		<result property="productId" column="PRODUCT_ID" jdbcType="BIGINT" />
+		<result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR" />
+		<result property="price" column="PRICE" jdbcType="DECIMAL" />
+		<result property="unit" column="UNIT" jdbcType="VARCHAR" />
+		<result property="orderAmount" column="ORDER_AMOUNT" jdbcType="DECIMAL" />
+		<result property="realAmount" column="REAL_AMOUNT" jdbcType="DECIMAL" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="separated" column="SEPARATED" jdbcType="BOOLEAN" />
+		<result property="separateTime" column="SEPARATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="code" column="CODE" jdbcType="VARCHAR" />
+		<result property="cispec" column="CISPEC" jdbcType="VARCHAR" />
+		<result property="brand" column="BRAND" jdbcType="VARCHAR" />
+		<result property="shopName" column="SHOP_NAME" jdbcType="VARCHAR" />
+		<result property="cashAmount" column="CASH_AMOUNT" jdbcType="DECIMAL" />
+		<result property="cashPrice" column="CASH_PRICE" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<insert id="addTradeOrderDetail" parameterType="TradeOrderDetail" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TRADE_ORDER_DETAIL (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		ORDER_ID,
+		PRODUCT_ID,
+		PRODUCT_NAME,
+		PRICE,
+		UNIT,
+		CASH_AMOUNT,
+		CASH_PRICE,
+		ORDER_AMOUNT,
+		REAL_AMOUNT,
+		REMARK,
+		SEPARATED,
+		SEPARATE_TIME,
+		BRAND,
+		CISPEC,
+		CODE
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{orderId,jdbcType=BIGINT},
+		#{productId,jdbcType=BIGINT},
+		#{productName,jdbcType=VARCHAR},
+		#{price,jdbcType=DECIMAL},
+		#{unit,jdbcType=VARCHAR},
+		#{cashAmount,jdbcType=DECIMAL},
+		#{cashPrice,jdbcType=DECIMAL},
+		#{orderAmount,jdbcType=DECIMAL},
+		#{realAmount,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR},
+		#{separated,jdbcType=BOOLEAN},
+		#{separateTime,jdbcType=TIMESTAMP},
+		#{brand,jdbcType=VARCHAR},
+		#{cispec,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateTradeOrderDetail" parameterType="TradeOrderDetail">
+		UPDATE TRADE_ORDER_DETAIL
+		<set>
+			<if test="price != null">
+				PRICE = #{price},
+			</if>
+			<if test="unit != null">
+				UNIT = #{unit},
+			</if>
+			<if test="cashAmount != null">
+				CASH_AMOUNT = #{cashAmount},
+			</if>
+			<if test="cashPrice != null">
+				CASH_PRICE = #{cashPrice},
+			</if>
+			<if test="orderAmount != null">
+				ORDER_AMOUNT = #{orderAmount},
+			</if>
+			<if test="realAmount != null">
+				REAL_AMOUNT = #{realAmount},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="separated != null">
+				SEPARATED = #{separated},
+			</if>
+			<if test="separateTime != null">
+				SEPARATE_TIME = #{separateTime},
+			</if>
+			<if test="cispec != null">
+				CISPEC = #{cispec},
+			</if>
+			<if test="brand != null">
+				BRAND = #{brand},
+			</if>
+			<if test="code != null">
+				CODE = #{code},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="updateTradeOrderDetailSeparated" parameterType="TradeOrderDetail">
+		UPDATE TRADE_ORDER_DETAIL
+		<set>
+			<if test="separated != null">
+				SEPARATED = #{separated},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findTradeOrderDetailById" parameterType="Long" resultMap="tradeOrderDetailMap">
+		SELECT * FROM TRADE_ORDER_DETAIL WHERE ID = #{id}
+	</select>
+
+
+
+	<select id="findTradeOrderDetailByOrder" parameterType="Long" resultMap="tradeOrderDetailMap">
+		SELECT * FROM TRADE_ORDER_DETAIL WHERE EXPIRED_TIME IS NULL AND ORDER_ID = #{orderId} ORDER BY SEPARATED,REAL_AMOUNT
+	</select>
+
+	<select id="findTradeOrderDetailByFilter" parameterType="HashMap" resultMap="tradeOrderDetailMap">
+		SELECT D.*,T.SHOP_NAME FROM TRADE_ORDER_DETAIL D
+		LEFT JOIN TRADE_ORDER T ON T.ID=D.ORDER_ID
+		<if test="parentClassificationId != null">
+			LEFT JOIN DISPATCHER_PRODUCT P ON D.PRODUCT_ID=P.ID
+		</if>
+		WHERE D.EXPIRED_TIME IS NULL AND T.DISPATCHER_ID = #{dispatcherId}
+		<if test="startDate != null">
+			AND date_format(D.CREATE_TIME,'%Y-%m-%d') = date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(D.CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="parentClassificationId != null">
+			AND P.PARENT_CLASSIFICATION_ID = #{parentClassificationId}
+		</if>
+		<if test="childClassificationId != null">
+			AND P.CHILD_CLASSIFICATION_ID = #{childClassificationId}
+		</if>
+		<if test="shopId != null">
+			AND T.SHOP_ID = #{shopId}
+		</if>
+		<if test="orderId != null">
+			AND D.ORDER_ID = #{orderId}
+		</if>
+		<if test="productId != null">
+			AND D.PRODUCT_ID = #{productId}
+		</if>
+		<if test="status != null">
+			AND T.STATUS = #{status}
+		</if>
+		ORDER BY D.ID DESC
+	</select>
+
+</mapper>

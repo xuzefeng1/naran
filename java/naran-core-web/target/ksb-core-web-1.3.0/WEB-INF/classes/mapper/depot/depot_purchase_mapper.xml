@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.dispatcher.depot.DepotPurchase">
+	<resultMap id="depotPurchaseMap" type="DepotPurchase">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="purchaseNo" column="PURCHASE_NO" jdbcType="VARCHAR" />
+		<result property="type" column="TYPE" jdbcType="VARCHAR" />
+		<result property="accountId" column="ACCOUNT_ID" jdbcType="BIGINT" />
+		<result property="accountName" column="ACCOUNT_NAME" jdbcType="VARCHAR" />
+		<result property="manager" column="MANAGER" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addDepotPurchase" parameterType="DepotPurchase" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DEPOT_PURCHASE (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+
+		DISPATCHER_ID,
+		PURCHASE_NO,
+		TYPE,
+		ACCOUNT_ID,
+		ACCOUNT_NAME,
+		MANAGER,
+		REMARK
+		)
+		VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+
+		#{dispatcherId,jdbcType=BIGINT},
+		#{purchaseNo,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},
+		#{accountId,jdbcType=BIGINT},
+		#{accountName,jdbcType=VARCHAR},
+		#{manager,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}
+
+		)
+	</insert>
+
+	<update id="updateDepotPurchase" parameterType="DepotPurchase">
+		UPDATE DEPOT_PURCHASE
+		<set>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime},
+			</if>
+
+			<if test="dispatcherId != null">
+				DISPATCHER_ID = #{dispatcherId},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark}
+			</if>
+
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findDepotPurchaseById" parameterType="Long" resultMap="depotPurchaseMap">
+		SELECT * FROM DEPOT_PURCHASE WHERE ID = #{id}
+	</select>
+
+	<select id="findDepotPurchaseByFilter" parameterType="HashMap" resultMap="depotPurchaseMap">
+		SELECT * FROM DEPOT_PURCHASE P
+		<if test="filter != null">
+			LEFT JOIN DEPOT_PURCHASE_DETAIL D ON P.ID=D.PURCHASE_ID
+		</if>
+		WHERE P.EXPIRED_TIME IS NULL AND P.DISPATCHER_ID = #{dispatcherId}
+		<if test="filter != null">
+			AND D.PRODUCT_NAME LIKE #{filter}
+		</if>
+		<if test="startDate != null">
+			AND date_format(P.CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(P.CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		ORDER BY P.ID DESC
+	</select>
+
+	<select id="findDepotPurchaseAmountBySum" parameterType="HashMap" resultType="Double">
+		SELECT SUM(AMOUNT) AMOUNT FROM DEPOT_PURCHASE WHERE EXPIRED_TIME IS NULL
+		AND DISPATCHER_ID = #{dispatcherId}
+		AND PRODUCT_ID =#{productId}
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m') &gt;= #{startDate}
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m') &lt;= #{endDate}
+		</if>
+	</select>
+
+
+</mapper>

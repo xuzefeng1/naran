@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.relation.RelationDispatcherAccount">
+	<resultMap id="RelationDispatcherAccountMap" type="RelationDispatcherAccount">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="accountId" column="ACCOUNT_ID" jdbcType="BIGINT" />
+		<result property="accountName" column="ACCOUNT_NAME" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="dispatcherLevel" column="DISPATCHER_LEVEL" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addRelationDispatcherAccount" parameterType="RelationDispatcherAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_DISPATCHER_ACCOUNT (
+		CREATE_TIME,
+		UPDATE_TIME,
+		ACCOUNT_ID,
+		ACCOUNT_NAME,
+		REMARK,
+		DISPATCHER_ID,
+		DISPATCHER_LEVEL
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{accountId,jdbcType=BIGINT},
+		#{accountName,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{dispatcherLevel,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateRelationDispatcherAccount" parameterType="RelationDispatcherAccount">
+		UPDATE RELATION_DISPATCHER_ACCOUNT
+		<set>
+			<if test="dispatcherLevel != null">
+				DISPATCHER_LEVEL = #{dispatcherLevel},
+			</if>
+			<if test="accountName != null">
+				ACCOUNT_NAME = #{accountName},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	<update id="deleteRelationDispatcherAccount" parameterType="HashMap">
+		DELETE FROM RELATION_DISPATCHER_ACCOUNT WHERE ACCOUNT_ID = #{accountId} AND DISPATCHER_ID = #{dispatcherId}
+	</update>
+
+	<select id="findRelationDispatcherAccountById" parameterType="Long" resultMap="RelationDispatcherAccountMap">
+		SELECT * FROM RELATION_DISPATCHER_ACCOUNT WHERE ID = #{id}
+	</select>
+
+	<select id="findRelationDispatcherAccountByAccountDispatcher" parameterType="HashMap" resultMap="RelationDispatcherAccountMap">
+		SELECT * FROM RELATION_DISPATCHER_ACCOUNT WHERE ACCOUNT_ID = #{accountId} AND DISPATCHER_ID = #{dispatcherId}
+	</select>
+	<select id="findRelationDispatcherAccountBySuperAccount" parameterType="HashMap" resultMap="RelationDispatcherAccountMap">
+		SELECT * FROM RELATION_DISPATCHER_ACCOUNT WHERE DISPATCHER_ID = #{dispatcherId} AND DISPATCHER_LEVEL='SUPER_ADMIN'
+	</select>
+	<select id="findRelationDispatcherAccountBySuperAccountId" parameterType="HashMap" resultMap="RelationDispatcherAccountMap">
+		SELECT * FROM RELATION_DISPATCHER_ACCOUNT WHERE ACCOUNT_ID = #{accountId} AND DISPATCHER_LEVEL='SUPER_ADMIN'
+	</select>
+
+	<select id="findRelationDispatcherAccountByAccount" parameterType="HashMap" resultMap="RelationDispatcherAccountMap">
+		SELECT * FROM RELATION_DISPATCHER_ACCOUNT WHERE ACCOUNT_ID = #{accountId} limit 1
+	</select>
+
+	<select id="findRelationDispatcherAccountByDispatcher" parameterType="HashMap" resultMap="RelationDispatcherAccountMap">
+		SELECT R.* FROM RELATION_DISPATCHER_ACCOUNT R
+		<if test="keyword != null">
+			LEFT JOIN ACCOUNT A ON A.ID=R.ACCOUNT_ID
+		</if>
+		WHERE R.DISPATCHER_ID = #{dispatcherId}
+		<if test="keyword != null">
+			AND A.NAME LIKE #{keyword}
+		</if>
+	</select>
+
+</mapper>

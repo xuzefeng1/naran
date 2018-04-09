@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="localCacheScope" value="STATEMENT" />
+	</settings>
+
+	<typeAliases>
+		<!-- 平台账号 -->
+		<typeAlias type="com.naran.core.entity.account.Account" alias="Account" />
+		<typeAlias type="com.naran.core.entity.account.AccountRecord" alias="AccountRecord" />
+
+		<!-- 活动相关 -->
+		<typeAlias type="com.naran.core.entity.activity.Activity" alias="Activity" />
+		<typeAlias type="com.naran.core.entity.activity.ActivityApply" alias="ActivityApply" />
+
+
+		<!-- 慈善记录 -->
+		<typeAlias type="com.naran.core.entity.charitable.CharitableRecord" alias="CharitableRecord" />
+		<!-- 慈善家 -->
+		<typeAlias type="com.naran.core.entity.charitable.Charitarian" alias="Charitarian" />
+		<!-- 慈善机构 -->
+		<typeAlias type="com.naran.core.entity.company.Company" alias="Company" />
+		<!-- 慈善足迹 -->
+		<typeAlias type="com.naran.core.entity.company.CompanyFootprint" alias="CompanyFootprint" />
+		<!-- 文章 -->
+		<typeAlias type="com.naran.core.entity.content.Content" alias="Content" />
+		<!-- 订单报名单 -->
+		<typeAlias type="com.naran.core.entity.order.OrderApply" alias="OrderApply" />
+		<!-- 订单反馈 -->
+		<typeAlias type="com.naran.core.entity.order.OrderFeedback" alias="OrderFeedback" />
+		<!-- 订单 -->
+		<typeAlias type="com.naran.core.entity.order.Order" alias="Order" />
+		<!-- 邮寄地址 -->
+		<typeAlias type="com.naran.core.entity.other.Mail" alias="Mail" />
+		<!-- 轮播图 -->
+		<typeAlias type="com.naran.core.entity.other.Publicity" alias="Publicity" />
+		
+		<!-- 那然快报 -->
+		<typeAlias type="com.naran.core.entity.other.Topline" alias="Topline" />
+		<!-- 问卷记录 -->
+		<typeAlias type="com.naran.core.entity.other.Rank" alias="Rank" />
+		<typeAlias type="com.naran.core.entity.other.Stationery" alias="Stationery" />
+
+		<!-- 那然等级 -->
+		<typeAlias type="com.naran.core.entity.points.Level" alias="Level" />
+		<!-- 等级记录 -->
+		<typeAlias type="com.naran.core.entity.points.LevelRecord" alias="LevelRecord" />
+		<!-- 爱心值记录 -->
+		<typeAlias type="com.naran.core.entity.points.LoveRecord" alias="LoveRecord" />
+		<!-- 分享记录 -->
+		<typeAlias type="com.naran.core.entity.record.ShareRecord" alias="ShareRecord" />
+		<!-- 签到记录 -->
+		<typeAlias type="com.naran.core.entity.record.SignRecord" alias="SignRecord" />
+		<!-- 收藏记录 -->
+		<typeAlias type="com.naran.core.entity.record.CollectionRecord" alias="CollectionRecord" />
+		<!-- 评论记录 -->
+		<typeAlias type="com.naran.core.entity.record.CommentRecord" alias="CommentRecord" />
+		<!-- 荣誉记录 -->
+		<typeAlias type="com.naran.core.entity.record.HonorRecord" alias="HonorRecord" />
+
+		<!-- 问卷 -->
+		<typeAlias type="com.naran.core.entity.questionnaire.Questionnaire" alias="Questionnaire" />
+		<!-- 问卷选项 -->
+		<typeAlias type="com.naran.core.entity.questionnaire.QuestionnaireOption" alias="QuestionnaireOption" />
+		<!-- 问卷记录 -->
+		<typeAlias type="com.naran.core.entity.questionnaire.QuestionnaireRecord" alias="QuestionnaireRecord" />
+
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.naran.foundation.mybatis.plugin.SelectCountSqlInterceptor" />
+		<plugin interceptor="com.naran.foundation.mybatis.plugin.OffsetLimitInterceptor">
+			<property name="dialectClass" value="com.naran.foundation.mybatis.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+
+	<mappers>
+
+		<mapper resource="mapper/account/account_mapper.xml" />
+		<mapper resource="mapper/account/account_record_mapper.xml" />
+		
+		<mapper resource="mapper/activity/activity_mapper.xml" />
+		<mapper resource="mapper/activity/activity_apply_mapper.xml" />
+
+		<mapper resource="mapper/charitable/charitable_record_mapper.xml" />
+		<mapper resource="mapper/charitable/criterion_mapper.xml" />
+
+		<mapper resource="mapper/company/company_mapper.xml" />
+		<mapper resource="mapper/company/company_footprint_mapper.xml" />
+
+		<mapper resource="mapper/content/content_mapper.xml" />
+
+		<mapper resource="mapper/order/order_apply_mapper.xml" />
+		<mapper resource="mapper/order/order_feedback_mapper.xml" />
+		<mapper resource="mapper/order/order_mapper.xml" />
+
+		<mapper resource="mapper/other/mail_mapper.xml" />
+		<mapper resource="mapper/other/publicity_mapper.xml" />
+		
+		<mapper resource="mapper/other/topline_mapper.xml" />
+		<mapper resource="mapper/other/rank_mapper.xml" />
+		<mapper resource="mapper/other/stationery_mapper.xml" />
+
+		<mapper resource="mapper/points/level_mapper.xml" />
+		<mapper resource="mapper/points/level_record_mapper.xml" />
+		<mapper resource="mapper/points/love_record_mapper.xml" />
+
+		<mapper resource="mapper/record/share_record_mapper.xml" />
+		<mapper resource="mapper/record/collection_record_mapper.xml" />
+		<mapper resource="mapper/record/comment_record_mapper.xml" />
+		<mapper resource="mapper/record/honor_record_mapper.xml" />
+		<mapper resource="mapper/record/sign_record_mapper.xml" />
+
+		<mapper resource="mapper/questionnaire/questionnaire_mapper.xml" />
+		<mapper resource="mapper/questionnaire/questionnaire_option_mapper.xml" />
+		<mapper resource="mapper/questionnaire/questionnaire_record_mapper.xml" />
+
+	</mappers>
+</configuration>

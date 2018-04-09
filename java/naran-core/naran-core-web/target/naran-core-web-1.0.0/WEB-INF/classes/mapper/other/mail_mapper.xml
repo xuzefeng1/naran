@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.other.Mail">
+	<resultMap id="MailMap" type="Mail">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="ACCOUNT_ID" property="accountId" jdbcType="BIGINT" />
+		<result column="NOW_MAIL" property="nowMail" jdbcType="BIT" />
+		<result column="MAIL_NAME" property="mailName" jdbcType="VARCHAR" />
+		<result column="MAIL_PHONE" property="mailPhone" jdbcType="VARCHAR" />
+		<result column="MAIL_ADDRESS" property="mailAddress" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="COUNTY" property="county" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addMail" parameterType="Mail" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_mail ( CREATE_TIME, UPDATE_TIME,
+		EXPIRED, ACCOUNT_ID, NOW_MAIL,
+		MAIL_NAME, MAIL_PHONE, MAIL_ADDRESS,
+		CITY, PROVINCE, COUNTY)
+		values ( #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{accountId,jdbcType=BIGINT}, #{nowMail,jdbcType=BIT},
+		#{mailName,jdbcType=VARCHAR}, #{mailPhone,jdbcType=VARCHAR}, #{mailAddress,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateMail" parameterType="Mail">
+		update naran_mail
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="nowMail != null">
+				NOW_MAIL = #{nowMail,jdbcType=BIT},
+			</if>
+			<if test="mailName != null">
+				MAIL_NAME = #{mailName,jdbcType=VARCHAR},
+			</if>
+			<if test="mailPhone != null">
+				MAIL_PHONE = #{mailPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="mailAddress != null">
+				MAIL_ADDRESS = #{mailAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				CITY = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				PROVINCE = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="county != null">
+				COUNTY = #{county,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<update id="updateMailNowMailFalse" parameterType="Long">
+		update naran_mail set NOW_MAIL=0 where ACCOUNT_ID = #{accountId} AND EXPIRED=1
+	</update>
+
+	<select id="findMailById" parameterType="Long" resultMap="MailMap">
+		SELECT * FROM naran_mail WHERE ID = #{id}
+	</select>
+
+	<select id="findMailByNowMail" parameterType="Long" resultMap="MailMap">
+		SELECT * FROM naran_mail WHERE NOW_MAIL=1 AND ACCOUNT_ID = #{accountId}
+	</select>
+
+
+	<select id="findMailByPage" parameterType="HashMap" resultMap="MailMap">
+		SELECT * FROM naran_mail WHERE EXPIRED=1
+		<if test="accountId != null">
+			AND ACCOUNT_ID = #{accountId}
+		</if>
+		<choose>
+			<when test="accountId != null">
+				ORDER BY NOW_MAIL DESC,ID DESC
+			</when>
+			<otherwise>
+				ORDER BY ID DESC
+			</otherwise>
+		</choose>
+
+	</select>
+
+
+</mapper>

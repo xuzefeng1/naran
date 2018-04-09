@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.relation.shop.RelationProductShopLevel">
+	<resultMap id="RelationProductShopLevelMap" type="RelationProductShopLevel">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="shopId" column="SHOP_ID" jdbcType="BIGINT" />
+		<result property="productId" column="PRODUCT_ID" jdbcType="BIGINT" />
+
+		<result property="discount" column="DISCOUNT" jdbcType="DECIMAL" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addRelationProductShopLevel" parameterType="RelationProductShopLevel" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO RELATION_PRODUCT_SHOP_LEVEL (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		DISPATCHER_ID,
+		SHOP_ID,
+		PRODUCT_ID,
+		DISCOUNT,
+		REMARK
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{dispatcherId,jdbcType=BIGINT},
+		#{shopId,jdbcType=BIGINT},
+		#{productId,jdbcType=BIGINT},
+		#{discount,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateRelationProductShopLevel" parameterType="RelationProductShopLevel">
+		UPDATE RELATION_PRODUCT_SHOP_LEVEL
+		<set>
+			<if test="discount != null">
+				DISCOUNT = #{discount},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findRelationProductShopLevelById" parameterType="Long" resultMap="RelationProductShopLevelMap">
+		SELECT * FROM RELATION_PRODUCT_SHOP_LEVEL WHERE ID = #{id}
+	</select>
+
+	<select id="findRelationProductShopLevelByShop" parameterType="Long" resultMap="RelationProductShopLevelMap">
+		SELECT * FROM RELATION_PRODUCT_SHOP_LEVEL WHERE EXPIRED_TIME IS NULL AND PRODUCT_ID = #{productId}
+		AND SHOP_ID = #{shopId} LIMIT 1
+	</select>
+
+</mapper>

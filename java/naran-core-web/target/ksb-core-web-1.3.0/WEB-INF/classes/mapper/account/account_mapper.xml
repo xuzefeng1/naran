@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.account.Account">
+	<resultMap id="AccountMap" type="Account">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="uuid" column="UUID" jdbcType="VARCHAR" />
+		<result property="imid" column="IMID" jdbcType="VARCHAR" />
+		<result property="mobile" column="MOBILE" jdbcType="VARCHAR" />
+		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="headImg" column="HEAD_IMG" jdbcType="VARCHAR" />
+		<result property="email" column="EMAIL" jdbcType="VARCHAR" />
+		<result property="qq" column="QQ" jdbcType="VARCHAR" />
+		<result property="accountNum" column="ACCOUNT_NUM" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addAccount" parameterType="Account" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ACCOUNT (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		UUID,
+		IMID,
+		MOBILE,
+		PASSWORD,
+		NAME,
+		ACCOUNT_NUM,
+		HEAD_IMG,
+		EMAIL,
+		QQ
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR},
+		#{imid,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{accountNum,jdbcType=VARCHAR},
+		#{headImg,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{qq,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateAccount" parameterType="Account">
+		UPDATE ACCOUNT
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="accountNum != null">
+				ACCOUNT_NUM = #{accountNum},
+			</if>
+			<if test="headImg != null">
+				HEAD_IMG = #{headImg},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email},
+			</if>
+			<if test="qq != null">
+				QQ = #{qq},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="updateAccountPassword" parameterType="HashMap">
+		UPDATE ACCOUNT SET PASSWORD = #{password}, UPDATE_TIME = NOW()
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findAccountById" parameterType="Long" resultMap="AccountMap">
+		SELECT * FROM ACCOUNT WHERE ID = #{id}
+	</select>
+
+	<select id="findAccountByUuid" parameterType="String" resultMap="AccountMap">
+		SELECT * FROM ACCOUNT WHERE EXPIRED_TIME IS NULL AND UUID = #{uuid}
+	</select>
+
+	<select id="findAccountByAccountNum" parameterType="String" resultMap="AccountMap">
+		SELECT * FROM ACCOUNT WHERE EXPIRED_TIME IS NULL AND ACCOUNT_NUM = #{accountNum}
+	</select>
+
+	<select id="findAccountByAccountNumPassword" parameterType="HashMap" resultMap="AccountMap">
+		SELECT * FROM ACCOUNT WHERE EXPIRED_TIME IS NULL AND ACCOUNT_NUM = #{accountNum} AND PASSWORD = #{password}
+	</select>
+
+</mapper>

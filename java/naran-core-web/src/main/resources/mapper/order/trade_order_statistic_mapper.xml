@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.order.TradeOrderStatistic">
+	<resultMap id="tradeOrderStatisticMap" type="TradeOrderStatistic">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT"/>
+		<result property="shopId" column="SHOP_ID" jdbcType="BIGINT"/>
+		<result property="shopName" column="SHOP_NAME" jdbcType="VARCHAR"/>
+		<result property="shopCharger" column="SHOP_CHARGER" jdbcType="VARCHAR"/>
+		<result property="shopMobile" column="SHOP_MOBILE" jdbcType="VARCHAR"/>
+		<result property="totalOrderAmount" column="TOTAL_ORDER_AMOUNT" jdbcType="INTEGER"/>
+		<result property="totalToPayAmount" column="TOTAL_TO_PAY_AMOUNT" jdbcType="INTEGER" />
+		<result property="totalCompleteAmount" column="TOTAL_COMPLETE_AMOUNT" jdbcType="INTEGER"/>
+		<result property="totalInvalidAmount" column="TOTAL_INVALID_AMOUNT" jdbcType="INTEGER"/>
+		<result property="totalOrderMoney" column="TOTAL_ORDER_MONEY" jdbcType="DECIMAL"/>
+		<result property="totalTotalMoney" column="TOTAL_TOTAL_MONEY" jdbcType="DECIMAL"/>
+		<result property="totalCashMoney" column="TOTAL_CASH_MONEY" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<insert id="addTradeOrderStatistic" parameterType="TradeOrderStatistic" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TRADE_ORDER_STATISTIC (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			DISPATCHER_ID,
+			SHOP_ID,
+			SHOP_NAME,
+			SHOP_CHARGER,
+			SHOP_MOBILE,
+			TOTAL_ORDER_AMOUNT,
+			TOTAL_TO_PAY_AMOUNT,
+			TOTAL_COMPLETE_AMOUNT,
+			TOTAL_INVALID_AMOUNT,
+			TOTAL_ORDER_MONEY,
+			TOTAL_TOTAL_MONEY,
+			TOTAL_CASH_MONEY
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{dispatcherId,jdbcType=BIGINT},
+			#{shopId,jdbcType=BIGINT},
+			#{shopName,jdbcType=VARCHAR},
+			#{shopCharger,jdbcType=VARCHAR},
+			#{shopMobile,jdbcType=VARCHAR},
+			#{totalOrderAmount,jdbcType=INTEGER},
+			#{totalToPayAmount,jdbcType=INTEGER},
+			#{totalCompleteAmount,jdbcType=INTEGER},
+			#{totalInvalidAmount,jdbcType=INTEGER},
+			#{totalOrderMoney,jdbcType=DECIMAL},
+			#{totalTotalMoney,jdbcType=DECIMAL},
+			#{totalCashMoney,jdbcType=DECIMAL}
+		)
+	</insert>
+
+	<update id="updateTradeOrderStatistic" parameterType="TradeOrderStatistic">
+		UPDATE TRADE_ORDER_STATISTIC
+		<set>
+			<if test="shopName != null">
+				SHOP_NAME = #{shopName},
+			</if>
+			<if test="shopCharger != null">
+				SHOP_CHARGER = #{shopCharger},
+			</if>
+			<if test="shopMobile != null">
+				SHOP_MOBILE = #{shopMobile},
+			</if>
+			<if test="totalOrderAmount != null">
+				TOTAL_ORDER_AMOUNT = #{totalOrderAmount},
+			</if>
+			<if test="totalToPayAmount != null">
+				TOTAL_TO_PAY_AMOUNT = #{totalToPayAmount},
+			</if>
+			<if test="totalCompleteAmount != null">
+				TOTAL_COMPLETE_AMOUNT = #{totalCompleteAmount},
+			</if>
+			<if test="totalInvalidAmount != null">
+				TOTAL_INVALID_AMOUNT = #{totalInvalidAmount},
+			</if>
+			<if test="totalOrderMoney != null">
+				TOTAL_ORDER_MONEY = #{totalOrderMoney},
+			</if>
+			<if test="totalTotalMoney != null">
+				TOTAL_TOTAL_MONEY = #{totalTotalMoney},
+			</if>
+			<if test="totalCashMoney != null">
+				TOTAL_CASH_MONEY = #{totalCashMoney},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="pageTradeOrderStatisticByFilter" parameterType="HashMap" resultMap="tradeOrderStatisticMap">
+		SELECT * FROM TRADE_ORDER_STATISTIC
+		WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="shopId != null">
+			AND SHOP_ID = #{shopId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+	
+	<select id="findTradeOrderStatisticByShop" parameterType="HashMap" resultMap="tradeOrderStatisticMap">
+		SELECT * FROM TRADE_ORDER_STATISTIC
+		WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND SHOP_ID = #{shopId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.dispatcher.Supplier">
+	<resultMap id="supplierMap" type="Supplier">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="uuid" column="UUID" jdbcType="VARCHAR" />
+		<result property="imid" column="IMID" jdbcType="VARCHAR" />
+
+		<result property="mobile" column="MOBILE" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="charger" column="CHARGER" jdbcType="VARCHAR" />
+		<result property="logo" column="LOGO" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+
+		<result property="city" column="CITY" jdbcType="VARCHAR" />
+		<result property="address" column="ADDRESS" jdbcType="VARCHAR" />
+		<result property="longitude" column="LONGITUDE" jdbcType="VARCHAR" />
+		<result property="latitude" column="LATITUDE" jdbcType="VARCHAR" />
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT" />
+		<result property="supplierOwnId" column="SUPPLIER_OWN_ID" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="addSupplier" parameterType="Supplier" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO SUPPLIER (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		UUID,
+		IMID,
+
+		MOBILE,
+		NAME,
+		CHARGER,
+		LOGO,
+		REMARK,
+
+		CITY,
+		ADDRESS,
+		LONGITUDE,
+		LATITUDE,
+		SUPPLIER_OWN_ID,
+
+		DISPATCHER_ID
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR},
+		#{imid,jdbcType=VARCHAR},
+
+		#{mobile,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{charger,jdbcType=VARCHAR},
+		#{logo,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+
+		#{city,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{longitude,jdbcType=VARCHAR},
+		#{latitude,jdbcType=VARCHAR},
+		#{supplierOwnId,jdbcType=BIGINT},
+		#{dispatcherId,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateSupplier" parameterType="Supplier">
+		UPDATE SUPPLIER
+		<set>
+			<if test="mobile != null">
+				MOBILE = #{mobile},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="charger != null">
+				CHARGER = #{charger},
+			</if>
+			<if test="logo != null">
+				LOGO = #{logo},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="city != null">
+				CITY = #{city},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address},
+			</if>
+			<if test="longitude != null">
+				LONGITUDE = #{longitude},
+			</if>
+			<if test="latitude != null">
+				LATITUDE = #{latitude},
+			</if>
+			<if test="dispatcherId != null">
+				DISPATCHER_ID = #{dispatcherId},
+			</if>
+
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	<update id="updateSupplierOwnId" parameterType="Supplier">
+		UPDATE SUPPLIER SET SUPPLIER_OWN_ID = NULL,UPDATE_TIME = #{updateTime} WHERE ID = #{id}
+	</update>
+	<select id="findSupplierById" parameterType="Long" resultMap="supplierMap">
+		SELECT * FROM SUPPLIER WHERE ID = #{id}
+	</select>
+	<select id="findSupplierByOwnId" parameterType="HashMap" resultMap="supplierMap">
+		SELECT * FROM SUPPLIER WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId} AND SUPPLIER_OWN_ID= #{supplierOwnId}
+	</select>
+
+	<select id="findSupplierByFilter" parameterType="HashMap" resultMap="supplierMap">
+		SELECT * FROM SUPPLIER WHERE EXPIRED_TIME IS NULL AND DISPATCHER_ID = #{dispatcherId}
+		<if test="name != null">
+			AND (NAME LIKE #{name} or MOBILE LIKE #{name})
+		</if>
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

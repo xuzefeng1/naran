@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.order.TradeOrderLog">
+	<resultMap id="tradeOrderLogMap" type="TradeOrderLog">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="orderId" column="ORDER_ID" jdbcType="BIGINT"/>
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR"/>
+		<result property="operation" column="OPERATION" jdbcType="VARCHAR"/>
+		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addTradeOrderLog" parameterType="TradeOrderLog" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TRADE_ORDER_LOG (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			ORDER_ID,
+			OPERATOR,
+			OPERATION,
+			REMARK
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{orderId,jdbcType=BIGINT},
+			#{operator,jdbcType=VARCHAR},
+			#{operation,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="findTradeOrderLogByOrder" parameterType="Long" resultMap="tradeOrderLogMap">
+		SELECT * FROM TRADE_ORDER_LOG WHERE EXPIRED_TIME IS NULL AND ORDER_ID = #{orderId} ORDER BY ID DESC
+	</select>
+	
+</mapper>

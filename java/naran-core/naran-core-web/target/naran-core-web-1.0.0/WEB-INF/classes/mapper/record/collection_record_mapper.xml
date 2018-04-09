@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.record.CollectionRecord">
+	<resultMap id="CollectionRecordMap" type="CollectionRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="EXPIRED" property="expired" jdbcType="BIT" />
+		<result column="ACCOUNT_ID" property="accountId" jdbcType="BIGINT" />
+		<result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+		<result column="SECOND_TYPE" jdbcType="VARCHAR" property="secondType" />
+	</resultMap>
+
+	<insert id="addCollectionRecord" parameterType="CollectionRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_collection_record (CREATE_TIME, UPDATE_TIME,
+		EXPIRED, ACCOUNT_ID, BUSINESS_ID,
+		BUSINESS_TYPE,SECOND_TYPE)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{accountId,jdbcType=BIGINT}, #{businessId,jdbcType=BIGINT},
+		#{businessType,jdbcType=VARCHAR},
+		#{secondType,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateCollectionRecord" parameterType="CollectionRecord">
+		update naran_collection_record
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="accountId != null">
+				ACCOUNT_ID = #{accountId,jdbcType=BIGINT},
+			</if>
+			<if test="businessId != null">
+				BUSINESS_ID = #{businessId,jdbcType=BIGINT},
+			</if>
+			<if test="businessType != null">
+				BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+			</if>
+			<if test="secondType != null">
+				SECOND_TYPE = #{secondType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findCollectionRecordById" parameterType="Long" resultMap="CollectionRecordMap">
+		SELECT * FROM naran_collection_record WHERE ID = #{id}
+	</select>
+
+	<select id="findCollectionRecordByAccount" parameterType="HashMap" resultMap="CollectionRecordMap">
+		SELECT * FROM naran_collection_record WHERE EXPIRED=1 AND ACCOUNT_ID = #{accountId} AND BUSINESS_ID = #{businessId}
+		AND BUSINESS_TYPE = #{businessType} LIMIT 1
+	</select>
+
+
+
+	<select id="findCollectionRecordByPage" parameterType="HashMap" resultMap="CollectionRecordMap">
+		SELECT * FROM naran_collection_record WHERE EXPIRED=1
+		<if test="accountId != null">
+			AND ACCOUNT_ID = #{accountId}
+		</if>
+		<if test="businessType != null">
+			AND BUSINESS_TYPE = #{businessType}
+		</if>
+		<if test="secondType != null">
+			AND SECOND_TYPE = #{secondType}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+
+</mapper>

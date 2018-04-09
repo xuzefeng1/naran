@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.naran.core.entity.order.Order">
+	<resultMap id="OrderMap" type="Order">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="EXPIRED" jdbcType="BIT" property="expired" />
+		<result column="INITIATOR_ID" jdbcType="BIGINT" property="initiatorId" />
+		<result column="INITIATOR_NIKE" jdbcType="VARCHAR" property="initiatorNike" />
+		<result column="ORDER_TYPE" jdbcType="VARCHAR" property="orderType" />
+		<result column="RECIPIENT_ID" jdbcType="BIGINT" property="recipientId" />
+		<result column="RECIPIENT_NIKE" jdbcType="VARCHAR" property="recipientNike" />
+		<result column="ORDER_IMGS" jdbcType="VARCHAR" property="orderImgs" />
+		<result column="ORDER_TITLE" jdbcType="VARCHAR" property="orderTitle" />
+		<result column="ORDER_CONTENT" jdbcType="VARCHAR" property="orderContent" />
+		<result column="MAIL_ADDRESS" jdbcType="VARCHAR" property="mailAddress" />
+		<result column="MAIL_NAME" jdbcType="VARCHAR" property="mailName" />
+		<result column="ORDER_STATUS" jdbcType="VARCHAR" property="orderStatus" />
+		<result column="MAIL_PHONE" jdbcType="VARCHAR" property="mailPhone" />
+		<result column="COLLECTION_TIMES" jdbcType="INTEGER" property="collectionTimes" />
+		<result column="COMMENT_TIMES" jdbcType="INTEGER" property="commentTimes" />
+		<result column="WILLING" jdbcType="BIT" property="willing" />
+		<result column="ANONYMOUS" jdbcType="BIT" property="anonymous" />
+		<result column="SHARE_TIMES" jdbcType="INTEGER" property="shareTimes" />
+		<result column="BACKDROP_IMG" jdbcType="VARCHAR" property="backdropImg" />
+		<result column="READ_TIMES" jdbcType="INTEGER" property="readTimes" />
+		<result column="CITY" jdbcType="VARCHAR" property="city" />
+		<result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+		<result column="COUNTY" jdbcType="VARCHAR" property="county" />
+		<result column="COMMODITY_TYPE" jdbcType="VARCHAR" property="commodityType" />
+		<result column="QUESTIONNAIRE_OPTIONS" jdbcType="VARCHAR" property="questionnaireOptions" />
+		<result column="AGING_DEGREE" jdbcType="VARCHAR" property="agingDegree" />
+		<result column="ESTIMATE_WEIGHT" jdbcType="VARCHAR" property="estimateWeight" />
+		<result column="ORDER_PRICE" jdbcType="VARCHAR" property="orderPrice" />
+		<result column="MAIL_CODE" jdbcType="VARCHAR" property="mailCode" />
+		<result column="MAIL_STATUS" jdbcType="VARCHAR" property="mailStatus" />
+		<result column="BACKDROP_BOTTOM_IMG" jdbcType="VARCHAR" property="backdropBottomImg" />
+	</resultMap>
+
+	<insert id="addOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+		insert into naran_order ( CREATE_TIME, UPDATE_TIME,
+		EXPIRED, INITIATOR_ID, INITIATOR_NIKE,
+		ORDER_TYPE, RECIPIENT_ID, RECIPIENT_NIKE,
+		ORDER_IMGS, ORDER_TITLE, ORDER_CONTENT,
+		MAIL_ADDRESS, MAIL_NAME, ORDER_STATUS,
+		MAIL_PHONE, COLLECTION_TIMES, COMMENT_TIMES,
+		WILLING, ANONYMOUS, SHARE_TIMES,
+		BACKDROP_IMG, READ_TIMES, CITY,
+		PROVINCE, COUNTY, COMMODITY_TYPE,
+		QUESTIONNAIRE_OPTIONS, AGING_DEGREE, ESTIMATE_WEIGHT,
+		ORDER_PRICE, MAIL_CODE, MAIL_STATUS,BACKDROP_BOTTOM_IMG)
+		values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{expired,jdbcType=BIT}, #{initiatorId,jdbcType=BIGINT}, #{initiatorNike,jdbcType=VARCHAR},
+		#{orderType,jdbcType=VARCHAR}, #{recipientId,jdbcType=BIGINT},
+		#{recipientNike,jdbcType=VARCHAR},
+		#{orderImgs,jdbcType=VARCHAR},
+		#{orderTitle,jdbcType=VARCHAR}, #{orderContent,jdbcType=VARCHAR},
+		#{mailAddress,jdbcType=VARCHAR}, #{mailName,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR},
+		#{mailPhone,jdbcType=VARCHAR}, #{collectionTimes,jdbcType=INTEGER}, #{commentTimes,jdbcType=INTEGER},
+		#{willing,jdbcType=BIT}, #{anonymous,jdbcType=BIT}, #{shareTimes,jdbcType=INTEGER},
+		#{backdropImg,jdbcType=VARCHAR}, #{readTimes,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{commodityType,jdbcType=VARCHAR},
+		#{questionnaireOptions,jdbcType=VARCHAR}, #{agingDegree,jdbcType=VARCHAR}, #{estimateWeight,jdbcType=VARCHAR},
+		#{orderPrice,jdbcType=VARCHAR}, #{mailCode,jdbcType=VARCHAR},
+		#{mailStatus,jdbcType=VARCHAR},#{backdropBottomImg,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateOrder" parameterType="Order">
+		update naran_order
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expired != null">
+				EXPIRED = #{expired,jdbcType=BIT},
+			</if>
+			<if test="initiatorId != null">
+				INITIATOR_ID = #{initiatorId,jdbcType=BIGINT},
+			</if>
+			<if test="initiatorNike != null">
+				INITIATOR_NIKE = #{initiatorNike,jdbcType=VARCHAR},
+			</if>
+			<if test="orderType != null">
+				ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+			</if>
+			<if test="recipientId != null">
+				RECIPIENT_ID = #{recipientId,jdbcType=BIGINT},
+			</if>
+			<if test="recipientNike != null">
+				RECIPIENT_NIKE = #{recipientNike,jdbcType=VARCHAR},
+			</if>
+			<if test="orderImgs != null">
+				ORDER_IMGS = #{orderImgs,jdbcType=VARCHAR},
+			</if>
+			<if test="orderTitle != null">
+				ORDER_TITLE = #{orderTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="orderContent != null">
+				ORDER_CONTENT = #{orderContent,jdbcType=VARCHAR},
+			</if>
+			<if test="mailAddress != null">
+				MAIL_ADDRESS = #{mailAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="mailName != null">
+				MAIL_NAME = #{mailName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="mailPhone != null">
+				MAIL_PHONE = #{mailPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="collectionTimes != null">
+				COLLECTION_TIMES = #{collectionTimes,jdbcType=INTEGER},
+			</if>
+			<if test="commentTimes != null">
+				COMMENT_TIMES = #{commentTimes,jdbcType=INTEGER},
+			</if>
+			<if test="willing != null">
+				WILLING = #{willing,jdbcType=BIT},
+			</if>
+			<if test="anonymous != null">
+				ANONYMOUS = #{anonymous,jdbcType=BIT},
+			</if>
+			<if test="shareTimes != null">
+				SHARE_TIMES = #{shareTimes,jdbcType=INTEGER},
+			</if>
+			<if test="backdropImg != null">
+				BACKDROP_IMG = #{backdropImg,jdbcType=VARCHAR},
+			</if>
+			<if test="readTimes != null">
+				READ_TIMES = #{readTimes,jdbcType=INTEGER},
+			</if>
+			<if test="city != null">
+				CITY = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				PROVINCE = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="county != null">
+				COUNTY = #{county,jdbcType=VARCHAR},
+			</if>
+			<if test="commodityType != null">
+				COMMODITY_TYPE = #{commodityType,jdbcType=VARCHAR},
+			</if>
+			<if test="questionnaireOptions != null">
+				QUESTIONNAIRE_OPTIONS = #{questionnaireOptions,jdbcType=VARCHAR},
+			</if>
+			<if test="agingDegree != null">
+				AGING_DEGREE = #{agingDegree,jdbcType=VARCHAR},
+			</if>
+			<if test="estimateWeight != null">
+				ESTIMATE_WEIGHT = #{estimateWeight,jdbcType=VARCHAR},
+			</if>
+			<if test="orderPrice != null">
+				ORDER_PRICE = #{orderPrice,jdbcType=VARCHAR},
+			</if>
+			<if test="mailCode != null">
+				MAIL_CODE = #{mailCode,jdbcType=VARCHAR},
+			</if>
+			<if test="mailStatus != null">
+				MAIL_STATUS = #{mailStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="backdropBottomImg != null">
+				BACKDROP_BOTTOM_IMG = #{backdropBottomImg,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<select id="findOrderById" parameterType="Long" resultMap="OrderMap">
+		SELECT * FROM naran_order WHERE ID = #{id}
+	</select>
+
+	<select id="findOrderByPage" parameterType="HashMap" resultMap="OrderMap">
+		SELECT * FROM naran_order WHERE EXPIRED=1 AND (ORDER_STATUS='INITIAL' OR ORDER_STATUS='GOING' OR ORDER_STATUS='WAITING' OR ORDER_STATUS='SUCCESS' OR ORDER_STATUS='FAIL' )
+		<if test="orderType != null">
+			AND ORDER_TYPE = #{orderType}
+		</if>
+		<if test="agingDegree != null">
+			AND AGING_DEGREE = #{agingDegree}
+		</if>
+		<if test="commodityType != null">
+			AND COMMODITY_TYPE = #{commodityType}
+		</if>
+		<if test="city != null">
+			AND CITY = #{city}
+		</if>
+		<if test="province != null">
+			AND PROVINCE = #{province}
+		</if>
+		<if test="initiatorId != null">
+			AND INITIATOR_ID = #{initiatorId}
+		</if>
+		<choose>
+			<when test="orderByType == 'HOT'">
+				ORDER BY READ_TIMES DESC,ID DESC
+			</when>
+			<otherwise>
+				ORDER BY ID DESC
+			</otherwise>
+		</choose>
+
+	</select>
+
+	<select id="findOrderByObtainPage" parameterType="HashMap" resultMap="OrderMap">
+		SELECT * FROM naran_order WHERE EXPIRED=1 AND ORDER_STATUS='SUCCESS'
+		AND ((INITIATOR_ID = #{accountId} AND ORDER_TYPE='WISH') OR (RECIPIENT_ID = #{accountId} AND ORDER_TYPE='DONATION') )
+		ORDER BY ID DESC
+	</select>
+	<select id="findOrderBySendPage" parameterType="HashMap" resultMap="OrderMap">
+		SELECT * FROM naran_order WHERE EXPIRED=1 AND ORDER_STATUS='SUCCESS'
+		AND ((INITIATOR_ID = #{accountId} AND ORDER_TYPE='DONATION') OR (RECIPIENT_ID = #{accountId} AND ORDER_TYPE='WISH') )
+		ORDER BY ID DESC
+	</select>
+
+
+
+</mapper>

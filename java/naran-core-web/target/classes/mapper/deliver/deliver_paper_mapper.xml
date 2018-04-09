@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.deliver.DeliverPaper">
+	<resultMap id="deliverPaperMap" type="DeliverPaper">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+		
+		<result property="dispatcherId" column="DISPATCHER_ID" jdbcType="BIGINT"/>
+		<result property="shopId" column="SHOP_ID" jdbcType="BIGINT"/>
+		<result property="shopName" column="SHOP_NAME" jdbcType="VARCHAR"/>
+		<result property="shopCharger" column="SHOP_CHARGER" jdbcType="VARCHAR"/>
+		<result property="shopMobile" column="SHOP_MOBILE" jdbcType="VARCHAR"/>
+		<result property="deliverCharger" column="DELIVER_CHARGER" jdbcType="VARCHAR"/>
+		<result property="deliverMobile" column="DELIVER_MOBILE" jdbcType="VARCHAR"/>
+		<result property="bussinesserCharger" column="BUSSINESSER_CHARGER" jdbcType="VARCHAR"/>
+		<result property="bussinesserMobile" column="BUSSINESSER_MOBILE" jdbcType="VARCHAR"/>
+		<result property="deliverProvider" column="DELIVER_PROVIDER" jdbcType="VARCHAR"/>
+		<result property="providerId" column="PROVIDER_ID" jdbcType="BIGINT"/>
+		<result property="deliverStatus" column="DELIVER_STATUS" jdbcType="VARCHAR"/>
+		<result property="deliverTime" column="DELIVER_TIME" jdbcType="VARCHAR"/>
+		<result property="deliverAddress" column="DELIVER_ADDRESS" jdbcType="VARCHAR"/>
+		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+		<result property="orderId" column="ORDER_ID" jdbcType="BIGINT"/>
+		<result property="deliverFee" column="DELIVER_FEE" jdbcType="DECIMAL"/>
+		<result property="subsidyFee" column="SUBSIDY_FEE" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<insert id="addDeliverPaper" parameterType="DeliverPaper" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DELIVER_PAPER (
+			CREATE_TIME,
+			UPDATE_TIME,
+			EXPIRED_TIME,
+			DISPATCHER_ID,
+			SHOP_ID,
+			SHOP_NAME,
+			SHOP_CHARGER,
+			SHOP_MOBILE,
+			DELIVER_CHARGER,
+			DELIVER_MOBILE,
+			BUSSINESSER_CHARGER,
+			BUSSINESSER_MOBILE,
+			DELIVER_PROVIDER,
+			PROVIDER_ID,
+			DELIVER_STATUS,
+			DELIVER_TIME,
+			DELIVER_ADDRESS,
+			REMARK,
+			ORDER_ID,
+			DELIVER_FEE,
+			SUBSIDY_FEE
+		) VALUES (
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{expiredTime,jdbcType=TIMESTAMP},
+			#{dispatcherId,jdbcType=BIGINT},
+			#{shopId,jdbcType=BIGINT},
+			#{shopName,jdbcType=VARCHAR},
+			#{shopCharger,jdbcType=VARCHAR},
+			#{shopMobile,jdbcType=VARCHAR},
+			#{deliverCharger,jdbcType=VARCHAR},
+			#{deliverMobile,jdbcType=VARCHAR},
+			#{bussinesserCharger,jdbcType=VARCHAR},
+			#{bussinesserMobile,jdbcType=VARCHAR},
+			#{deliverProvider,jdbcType=VARCHAR},
+			#{providerId,jdbcType=BIGINT},
+			#{deliverStatus,jdbcType=VARCHAR},
+			#{deliverTime,jdbcType=VARCHAR},
+			#{deliverAddress,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			#{orderId,jdbcType=BIGINT},
+			#{deliverFee,jdbcType=DECIMAL},
+			#{subsidyFee,jdbcType=DECIMAL}
+		)
+	</insert>
+
+	<update id="updateDeliverPaper" parameterType="DeliverPaper">
+		UPDATE DELIVER_PAPER
+		<set>
+			<if test="deliverProvider != null">
+				DELIVER_PROVIDER = #{deliverProvider},
+			</if>
+			<if test="deliverStatus != null">
+				DELIVER_STATUS = #{deliverStatus},
+			</if>
+			<if test="providerId != null">
+				PROVIDER_ID = #{providerId},
+			</if>
+			<if test="deliverCharger != null">
+				DELIVER_CHARGER = #{deliverCharger},
+			</if>
+			<if test="deliverMobile != null">
+				DELIVER_MOBILE = #{deliverMobile},
+			</if>
+			<if test="bussinesserCharger != null">
+				BUSSINESSER_CHARGER = #{bussinesserCharger},
+			</if>
+			<if test="bussinesserMobile != null">
+				BUSSINESSER_MOBILE = #{bussinesserMobile},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="deliverFee != null">
+				DELIVER_FEE = #{deliverFee},
+			</if>
+			<if test="subsidyFee != null">
+				SUBSIDY_FEE = #{subsidyFee},
+			</if>			
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>			
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<select id="findDeliverPaperById" parameterType="Long" resultMap="deliverPaperMap">
+		SELECT * FROM DELIVER_PAPER WHERE ID = #{id}
+	</select>
+
+	<select id="findDeliverPaperByOrder" parameterType="Long" resultMap="deliverPaperMap">
+		SELECT * FROM DELIVER_PAPER WHERE EXPIRED_TIME IS NULL AND ORDER_ID = #{orderId}
+	</select>
+	
+	<select id="findDeliverPaperByDeliverStatus" parameterType="HashMap" resultMap="deliverPaperMap">
+		SELECT * FROM DELIVER_PAPER WHERE EXPIRED_TIME IS NULL
+		<if test="dispatcherId != null">
+			AND DISPATCHER_ID = #{dispatcherId}
+		</if>
+		<if test="deliverStatus != null">
+			AND DELIVER_STATUS = #{deliverStatus}
+		</if>
+	</select>
+	
+	<select id="pageDeliverPaperByFilter" parameterType="HashMap" resultMap="deliverPaperMap">
+		SELECT * FROM DELIVER_PAPER WHERE EXPIRED_TIME IS NULL 
+		<if test="startDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(DELIVER_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+		<if test="dispatcherId != null">
+			AND DISPATCHER_ID = #{dispatcherId}
+		</if>
+		<if test="shopName != null">
+			AND SHOP_NAME = #{shopName}
+		</if>
+		<if test="deliverProvider != null">
+			AND DELIVER_PROVIDER = #{deliverProvider}
+		</if>
+		<if test="deliverStatus != null">
+			AND DELIVER_STATUS = #{deliverStatus}
+		</if>
+		ORDER BY DELIVER_STATUS DESC, DELIVER_TIME DESC 
+	</select>
+	
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.ksb.core.entity.dispatcher.Dispatcher">
+	<resultMap id="dispatcherMap" type="Dispatcher">
+		<id property="id" column="ID" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="expiredTime" column="EXPIRED_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="uuid" column="UUID" jdbcType="VARCHAR" />
+		<result property="imid" column="IMID" jdbcType="VARCHAR" />
+
+		<result property="mobile" column="MOBILE" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="charger" column="CHARGER" jdbcType="VARCHAR" />
+		<result property="logo" column="LOGO" jdbcType="VARCHAR" />
+		<result property="identityCard" column="IDENTITY_CARD" jdbcType="VARCHAR" />
+		<result property="bussinessLicence" column="BUSSINESS_LICENCE" jdbcType="VARCHAR" />
+
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="activeStatus" column="ACTIVE_STATUS" jdbcType="VARCHAR" />
+
+		<result property="city" column="CITY" jdbcType="VARCHAR" />
+		<result property="address" column="ADDRESS" jdbcType="VARCHAR" />
+		<result property="longitude" column="LONGITUDE" jdbcType="VARCHAR" />
+		<result property="latitude" column="LATITUDE" jdbcType="VARCHAR" />
+		<result property="roleId" column="ROLE_ID" jdbcType="BIGINT" />
+		<result property="perfect" column="PERFECT" jdbcType="BIGINT" />
+		<result property="initial" column="INITIAL" jdbcType="VARCHAR" />
+
+
+
+	</resultMap>
+
+	<insert id="addDispatcher" parameterType="Dispatcher" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DISPATCHER (
+		CREATE_TIME,
+		UPDATE_TIME,
+		EXPIRED_TIME,
+		UUID,
+		IMID,
+		MOBILE,
+		NAME,
+		CHARGER,
+		LOGO,
+		DESCRIPTION,
+		REMARK,
+		ACTIVE_STATUS,
+		CITY,
+		ADDRESS,
+		LONGITUDE,
+		LATITUDE,
+		ROLE_ID,
+		INITIAL,
+		PERFECT
+		) VALUES (
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{expiredTime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR},
+		#{imid,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{charger,jdbcType=VARCHAR},
+		#{logo,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{activeStatus,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{longitude,jdbcType=VARCHAR},
+		#{latitude,jdbcType=VARCHAR},
+		#{roleId,jdbcType=BIGINT},
+		#{initial,jdbcType=VARCHAR},
+		#{perfect,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateDispatcher" parameterType="Dispatcher">
+		UPDATE DISPATCHER
+		<set>
+			<if test="mobile != null">
+				MOBILE = #{mobile},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="initial != null">
+				INITIAL = #{initial},
+			</if>
+			<if test="charger != null">
+				CHARGER = #{charger},
+			</if>
+			<if test="logo != null">
+				LOGO = #{logo},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="activeStatus != null">
+				ACTIVE_STATUS = #{activeStatus},
+			</if>
+			<if test="city != null">
+				CITY = #{city},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address},
+			</if>
+			<if test="longitude != null">
+				LONGITUDE = #{longitude},
+			</if>
+			<if test="latitude != null">
+				LATITUDE = #{latitude},
+			</if>
+			<if test="roleId != null">
+				ROLE_ID = #{roleId},
+			</if>
+			<if test="perfect != null">
+				PERFECT = #{perfect},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="expiredTime != null">
+				EXPIRED_TIME = #{expiredTime}
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<update id="updateDispatcherUuidImid" parameterType="HashMap">
+		UPDATE DISPATCHER SET UUID = #{uuid}, IMID = #{imid} WHERE ID = #{id}
+	</update>
+
+	<select id="findDispatcherById" parameterType="Long" resultMap="dispatcherMap">
+		SELECT * FROM DISPATCHER WHERE ID = #{id}
+	</select>
+
+	<select id="findDispatcherByUuid" parameterType="String" resultMap="dispatcherMap">
+		SELECT D.* FROM DISPATCHER D LEFT JOIN RELATION_DISPATCHER_ACCOUNT R ON D.ID=R.DISPATCHER_ID
+		LEFT JOIN ACCOUNT A ON A.ID=R.ACCOUNT_ID
+		WHERE D.EXPIRED_TIME IS NULL
+		AND
+		R.DISPATCHER_LEVEL='SUPER_ADMIN'
+		AND A.UUID = #{uuid}
+	</select>
+
+	<select id="findDispatcherByInitial" parameterType="String" resultMap="dispatcherMap">
+		SELECT * FROM DISPATCHER WHERE EXPIRED_TIME IS NULL
+		AND INITIAL = #{initial} LIMIT 1
+	</select>
+	<select id="findDispatcherByFilter" parameterType="HashMap" resultMap="dispatcherMap">
+		SELECT * FROM DISPATCHER WHERE EXPIRED_TIME IS NULL
+		<if test="name != null">
+			AND (NAME LIKE #{name} or MOBILE LIKE #{name})
+		</if>
+		<if test="startDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')
+		</if>
+		<if test="endDate != null">
+			AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')
+		</if>
+
+		<if test="roleId != null">
+			AND ROLE_ID = #{roleId}
+		</if>
+		ORDER BY ID DESC
+	</select>
+</mapper>
